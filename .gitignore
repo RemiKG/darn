@@ -1,0 +1,26 @@
+# dependencies / venvs
+node_modules/
+.venv/
+venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+
+# builds
+web/dist/
+*.egg-info/
+build/
+
+# env & secrets — never committed
+.env
+.env.*
+!.env.example
+*.pem
+service-account*.json
+
+# tooling noise
+.DS_Store
+Thumbs.db
+*.log
+.vite/
