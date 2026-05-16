@@ -16,3 +16,30 @@ SOCKS: list[Sock] = [
     Sock("argyle-karen", "Argyle Karen", 1200, "sock-argyle-karen"),
     Sock("lucky-odd", "The Lucky Odd", 700, "sock-lucky-odd"),
     Sock("off-duty-cloud", "Off-Duty Cloud", 1000, "sock-off-duty-cloud"),
+    Sock("tuesdays-revenge", "Tuesday's Revenge", 900, "sock-tuesdays-revenge"),
+]
+
+# The single in-memory shop state, shared by every router.
+STATE = ShopState(SOCKS)
+
+router = APIRouter()
+
+
+def _item(sock: Sock, stock: int) -> dict:
+    return {
+        "id": sock.id,
+        "name": sock.name,
+        "price_cents": sock.price_cents,
+        "price": sock.price_dollars,
+        "art_id": sock.art_id,
+        "stock": stock,
+    }
+
+
+@router.get("/api/catalog")
+def get_catalog() -> dict:
+    with get_tracer().start_as_current_span("catalog.list"):
+        # One cheap read for every sock's stock, then assemble the listing.
+        stock = STATE.stock_snapshot()
+        items = [_item(sock, stock.get(sock.id, 0)) for sock in SOCKS]
+        return {"socks": items}
