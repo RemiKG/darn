@@ -1,0 +1,18 @@
+# Build context for shop/Dockerfile (context = shop/).
+# The image needs requirements.txt + app/ only.
+
+.venv
+**/__pycache__
+**/*.pyc
+.pytest_cache
+tests
+
+# patch payloads are read by the DARN SERVER image, not the shop image —
+# sabotage reaches this image as real commits to app/*.py
+defects
+
+pyproject.toml
+Dockerfile
+.dockerignore
+.env
+.env.*
