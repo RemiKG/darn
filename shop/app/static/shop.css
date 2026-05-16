@@ -1,0 +1,70 @@
+/* ============================================================
+   Loose Threads — the patient, not the product.
+   Own identity (warmer cream, its own wordmark) on the same
+   family palette. Tokens + the bits of the Darn base the shop
+   needs are inlined here so the storefront is self-contained.
+   ============================================================ */
+
+/* self-hosted faces (only the weights the shop actually uses) */
+@font-face { font-family: "Baloo 2"; src: url("fonts/baloo2-600.woff2") format("woff2"); font-weight: 600; font-display: block; }
+@font-face { font-family: "Inter"; src: url("fonts/inter-400.woff2") format("woff2"); font-weight: 400; font-display: block; }
+@font-face { font-family: "Inter"; src: url("fonts/inter-500.woff2") format("woff2"); font-weight: 500; font-display: block; }
+@font-face { font-family: "Inter"; src: url("fonts/inter-600.woff2") format("woff2"); font-weight: 600; font-display: block; }
+@font-face { font-family: "Inter"; src: url("fonts/inter-700.woff2") format("woff2"); font-weight: 700; font-display: block; }
+@font-face { font-family: "JetBrains Mono"; src: url("fonts/jetbrainsmono-400.woff2") format("woff2"); font-weight: 400; font-display: block; }
+@font-face { font-family: "JetBrains Mono"; src: url("fonts/jetbrainsmono-500.woff2") format("woff2"); font-weight: 500; font-display: block; }
+@font-face { font-family: "JetBrains Mono"; src: url("fonts/jetbrainsmono-600.woff2") format("woff2"); font-weight: 600; font-display: block; }
+@font-face { font-family: "JetBrains Mono"; src: url("fonts/jetbrainsmono-700.woff2") format("woff2"); font-weight: 700; font-display: block; }
+
+:root {
+  --cream:       #F5F3EF;
+  --cream-2:     #EDEAE2;
+  --card:        #FDFCFA;
+  --ink:         #1B2A44;
+  --ink-soft:    rgba(27, 42, 68, 0.66);
+  --ink-faint:   rgba(27, 42, 68, 0.40);
+  --line:        rgba(27, 42, 68, 0.13);
+  --amber:       #E8A33D;
+  --amber-deep:  #A9690F;
+  --amber-wash:  #F7E8CE;
+  --amber-soft:  rgba(232, 163, 61, 0.16);
+
+  --font-brand: "Baloo 2", system-ui, sans-serif;
+  --font-ui:    "Inter", system-ui, sans-serif;
+  --font-mono:  "JetBrains Mono", ui-monospace, monospace;
+
+  --r-card: 18px;
+  --r-btn:  14px;
+  --r-pill: 999px;
+  --shadow-card: 0 1px 2px rgba(27,42,68,0.05), 0 8px 28px rgba(27,42,68,0.07);
+  --shadow-pop:  0 2px 6px rgba(27,42,68,0.08), 0 16px 48px rgba(27,42,68,0.14);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+body {
+  background: var(--cream);
+  color: var(--ink);
+  font-family: var(--font-ui);
+  font-size: 15px;
+  line-height: 1.55;
+  min-width: 1100px;
+}
+
+.num, .mono {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+
+/* ---- buttons ---- */
+.btn {
+  display: inline-flex; align-items: center; gap: 10px;
+  border: none; cursor: pointer;
+  border-radius: var(--r-btn);
+  font-family: var(--font-ui); font-weight: 600; font-size: 15px;
+  padding: 13px 22px;
+  transition: transform .12s ease;
+}
+.btn-ink   { background: var(--ink); color: var(--cream); }
+.btn-ghost { background: transparent; color: var(--ink); border: 1.5px solid var(--line); }
