@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Loose Threads — Fine socks, loosely threaded.</title>
+<link rel="stylesheet" href="/static/shop.css">
+</head>
+<body data-darn-url="{{ darn_url }}">
+
+<!-- shared sock silhouette + the six patterned symbols (from socks.svg) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <path id="sockP" d="M 121 18 L 179 18 Q 187 18 187 26 L 187 100
+      C 187 124 180 140 160 146 L 60 146
+      C 36 146 24 134 24 116 C 24 100 34 92 52 92 L 96 92
+      C 108 92 113 86 113 72 L 113 26 Q 113 18 121 18 Z"/>
+    <clipPath id="sockC"><use href="#sockP"/></clipPath>
+    <g id="cloudG">
+      <circle cx="-9" cy="0" r="7"/>
+      <circle cx="1" cy="-4" r="9"/>
+      <circle cx="11" cy="1" r="6.5"/>
+      <rect x="-16" y="0" width="33" height="8" rx="4"/>
+    </g>
+    <g id="sockBase"><use href="#sockP" fill="#FDFCFA"/></g>
+    <g id="sockTop">
+      <use href="#sockP" fill="none" stroke="#1B2A44" stroke-width="7" stroke-linejoin="round"/>
+      <path d="M 116 46 L 184 46" fill="none" stroke="#1B2A44" stroke-width="5" stroke-linecap="round"/>
+    </g>
+  </defs>
+
+  <symbol id="sock-monday-heel" viewBox="0 0 200 170">
+    <use href="#sockBase"/>
+    <g clip-path="url(#sockC)"><circle cx="193" cy="148" r="56" fill="#E8A33D"/></g>
+    <use href="#sockTop"/>
+  </symbol>
+  <symbol id="sock-static-cling" viewBox="0 0 200 170">
+    <use href="#sockBase"/>
+    <g clip-path="url(#sockC)" stroke-linejoin="round" stroke-linecap="round" fill="none">
+      <polyline stroke="#1B2A44" stroke-width="4.5" points="106 64 120 74 134 64 148 74 162 64 176 74 190 64"/>
+      <polyline stroke="#E8A33D" stroke-width="5" points="14 106 30 118 46 106 62 118 78 106 94 118 110 106 126 118 142 106 158 118 174 106 190 118"/>
+      <polyline stroke="#1B2A44" stroke-width="4.5" points="14 124 30 136 46 124 62 136 78 124 94 136 110 124 126 136 142 124 158 136 174 124 190 136"/>
+    </g>
+    <use href="#sockTop"/>
+  </symbol>
+  <symbol id="sock-argyle-karen" viewBox="0 0 200 170">
+    <use href="#sockBase"/>
+    <g clip-path="url(#sockC)">
+      <path fill="#E8A33D" d="M 86 96 L 104 120 L 86 144 L 68 120 Z"/>
+      <path fill="#1B2A44" d="M 130 96 L 148 120 L 130 144 L 112 120 Z"/>
+      <path stroke="rgba(27,42,68,0.40)" fill="none" stroke-width="2.25" stroke-dasharray="5 5"
+        d="M 50 106 L 122 134 M 50 134 L 122 106 M 94 106 L 166 134 M 94 134 L 166 106"/>
+    </g>
+    <use href="#sockTop"/>
+  </symbol>
+  <symbol id="sock-lucky-odd" viewBox="0 0 200 170">
+    <use href="#sockBase"/>
+    <g clip-path="url(#sockC)">
+      <rect fill="#E8A33D" x="106" y="56" width="90" height="11"/>
+      <rect fill="#1B2A44" x="106" y="76" width="90" height="5.5"/>
+      <rect fill="#1B2A44" x="8" y="103" width="190" height="12" transform="rotate(-4 100 109)"/>
+      <rect fill="#E8A33D" x="8" y="123" width="190" height="8" transform="rotate(2.5 100 127)"/>
+    </g>
+    <use href="#sockTop"/>
+  </symbol>
+  <symbol id="sock-off-duty-cloud" viewBox="0 0 200 170">
+    <use href="#sockBase"/>
+    <g clip-path="url(#sockC)" fill="#E8A33D">
+      <use href="#cloudG" transform="translate(146 60) scale(0.85)"/>
+      <use href="#cloudG" transform="translate(72 112)"/>
+      <use href="#cloudG" transform="translate(122 128) scale(0.72)"/>
+    </g>
+    <use href="#sockTop"/>
+  </symbol>
+  <symbol id="sock-tuesdays-revenge" viewBox="0 0 200 170">
+    <use href="#sockBase"/>
+    <g clip-path="url(#sockC)">
+      <path fill="#E8A33D" stroke="#1B2A44" stroke-width="4" stroke-linejoin="round"
+        d="M 105 99 L 90 121 L 101 121 L 94 141 L 116 115 L 104 115 Z"/>
+    </g>
+    <use href="#sockTop"/>
+  </symbol>
+</svg>
+
+<header class="shopbar">
+  <div class="wrap">
+    <a class="ltwm" href="/">Loose Threads<svg class="tail" width="96" height="44" viewBox="0 0 96 44" fill="none" aria-hidden="true">
+      <path d="M 1.5 30 C 7 35.5, 15 39, 23 38.5 C 33 38, 38 30, 32.5 25.5 C 28 22, 21.5 25, 23 30.5 C 24.5 35.5, 33 38.5, 43 38 C 58 37.3, 68 32, 78 30.5 C 84 29.6, 89 30.5, 93 33"
+        stroke="var(--amber)" stroke-width="3" stroke-linecap="round"/>
+    </svg></a>
+    <a class="cart" href="#checkout" aria-label="Cart">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M2.5 3.5 H5 l2.3 11 H18 l2.2-8 H6.2"/>
+        <circle cx="9.3" cy="19.3" r="1.7"/>
+        <circle cx="16.6" cy="19.3" r="1.7"/>
+      </svg>
+      <span class="badge num" id="cart-badge" hidden>0</span>
+    </a>
+  </div>
+</header>
+
+<main class="wrap pagepad">
+
+  <p class="tagline">Fine socks, loosely threaded.</p>
+
+  <section class="grid">
+    {% for sock in catalog %}
+    <article class="prod card">
+      <div class="well">
+        <svg class="sock" viewBox="0 0 200 170" aria-label="{{ sock.name }}"><use href="#{{ sock.art_id }}"/></svg>
+      </div>
+      <div class="meta"><h3>{{ sock.name }}</h3><span class="price num">${{ sock.price_dollars }}</span></div>
+      <button class="btn btn-ghost add" data-sock="{{ sock.id }}">Add to cart</button>
+    </article>
+    {% endfor %}
+  </section>
+
+  <!-- torn-state banner — shown only when the shop really returns a 500 -->
+  <div class="mendbanner" id="mend-banner" hidden>
+    <span class="dot"></span>
+    <span>Checkout is having a moment — <a id="mend-link" href="#">Darn is on it →</a></span>
+  </div>
+
+  <!-- checkout strip — the surface that breaks in the demo -->
+  <section class="checkout card" id="checkout">
+    <span class="sum num" id="cart-summary">0 socks <span class="dim">·</span> $0</span>
+    <div class="failwrap">
+      <button class="btn btn-ink" id="checkout-btn">Check out</button>
+      <span class="failrow num" id="fail-row" hidden></span>
+    </div>
+  </section>
+
+  <p class="shopfoot">This shop exists to be broken. The socks are not real. The errors will be.</p>
+
+</main>
+
+<script src="/static/shop.js"></script>
+</body>
+</html>
