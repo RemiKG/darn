@@ -1,0 +1,10 @@
+# Build context for trafficbot/Dockerfile (context = trafficbot/).
+# The image needs requirements.txt + bot.py only.
+
+.venv
+__pycache__
+*.pyc
+Dockerfile
+.dockerignore
+.env
+.env.*
