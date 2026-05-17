@@ -1,0 +1,13 @@
+{
+  "key": "penny-shaver",
+  "title": "The penny shaver",
+  "blurb": "Totals drift by a cent — and the payment provider rejects them.",
+  "davis_expectation": "Davis will see: error-rate spike on POST /api/pay",
+  "commit_message": "compute payment charge in dollars",
+  "files": [
+    {
+      "path": "shop/app/pay.py",
+      "content": "\"\"\"Payment — charge an order, but only once the books reconcile.\n\nBefore moving money we re-derive the charge from the order's own line items and\nrequire it to match the total we quoted at checkout, to the cent. If the two\never disagree something is wrong with our pricing and we refuse the charge\nrather than bill the customer the wrong amount.\n\"\"\"\n\nfrom __future__ import annotations\n\nfrom fastapi import APIRouter, HTTPException\n\nfrom .catalog import STATE\nfrom .models import PayRequest\nfrom .otel import get_tracer\nfrom .state import tax_cents\n\nrouter = APIRouter()\n\n\nclass PaymentError(RuntimeError):\n    \"\"\"Raised when the re-derived charge doesn't reconcile with the order total.\"\"\"\n\n\n@router.post(\"/api/pay\")\ndef pay(req: PayRequest) -> dict:\n    with get_tracer().start_as_current_span(\"pay.charge\"):\n        order = STATE.get_order(req.order_id)\n        if order is None:\n            raise HTTPException(status_code=404, detail=\"order not found\")\n\n        # Re-derive the charge straight from the order, server-side.\n        subtotal_cents = sum(line.qty * line.unit_price_cents for line in order.lines)\n        subtotal = subtotal_cents / 100\n        charge_cents = int((subtotal + subtotal * 0.08875) * 100)\n\n        if charge_cents != order.total_cents:\n            raise PaymentError(\n                f\"charge reconciliation failed for {order.id}: \"\n                f\"re-derived {charge_cents} != quoted {order.total_cents}\"\n            )\n\n        if req.amount_cents != order.total_cents:\n            raise HTTPException(status_code=400, detail=\"amount does not match order total\")\n\n        order.status = \"paid\"\n        STATE.save_order(order)\n        return {\"order_id\": order.id, \"status\": \"paid\", \"amount_cents\": req.amount_cents}\n"
+    }
+  ]
+}

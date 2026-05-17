@@ -1,0 +1,13 @@
+{
+  "key": "checkout-null",
+  "title": "The checkout null",
+  "blurb": "Checkout forgets that carts can be empty. Nulls everywhere.",
+  "davis_expectation": "Davis will see: error-rate spike on POST /api/checkout",
+  "commit_message": "simplify lead-item lookup in checkout",
+  "files": [
+    {
+      "path": "shop/app/checkout.py",
+      "content": "\"\"\"Checkout — turn a cart into an order, total it up (subtotal + tax).\"\"\"\n\nfrom __future__ import annotations\n\nfrom fastapi import APIRouter, HTTPException\n\nfrom .catalog import STATE\nfrom .models import CartLine, CheckoutRequest\nfrom .otel import get_tracer\nfrom .state import tax_cents\n\nrouter = APIRouter()\n\n\ndef _lead_sock(lines: list[CartLine]) -> str | None:\n    \"\"\"The headline item for the order, used on the confirmation screen.\n\n    The priciest sock in the cart (\"The Monday Heel and 2 more\"). Empty carts\n    have no lead item, so this returns None for them.\n    \"\"\"\n    head = max(lines, key=lambda line: line.unit_price_cents) if lines else None\n    return head.sock_id\n\n\ndef _order_body(order) -> dict:\n    return {\n        \"order_id\": order.id,\n        \"subtotal_cents\": order.subtotal_cents,\n        \"total_cents\": order.total_cents,\n        \"lead_sock\": order.lead_sock,\n        \"status\": order.status,\n    }\n\n\n@router.post(\"/api/checkout\")\ndef checkout(req: CheckoutRequest) -> dict:\n    with get_tracer().start_as_current_span(\"checkout.create_order\"):\n        cart = STATE.get_cart(req.cart_id)\n        if cart is None:\n            raise HTTPException(status_code=404, detail=\"cart not found\")\n\n        subtotal_cents = sum(line.qty * line.unit_price_cents for line in cart.lines)\n        total_cents = subtotal_cents + tax_cents(subtotal_cents)\n\n        order = STATE.create_order(\n            cart, subtotal_cents, total_cents, lead_sock=_lead_sock(cart.lines)\n        )\n        return _order_body(order)\n"
+    }
+  ]
+}

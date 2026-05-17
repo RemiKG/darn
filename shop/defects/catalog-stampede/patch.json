@@ -1,0 +1,13 @@
+{
+  "key": "catalog-stampede",
+  "title": "The catalog stampede",
+  "blurb": "Every sock on the catalog page asks the database how it's feeling. Individually.",
+  "davis_expectation": "Davis will see: response-time degradation on GET /api/catalog",
+  "commit_message": "show per-item live stock on the catalog page",
+  "files": [
+    {
+      "path": "shop/app/catalog.py",
+      "content": "\"\"\"The catalog — six socks, and the endpoint that lists them with live stock.\"\"\"\n\nfrom __future__ import annotations\n\nfrom fastapi import APIRouter\n\nfrom .models import Sock\nfrom .otel import get_tracer\nfrom .state import ShopState\n\n# The shop's six products. Prices are whole dollars (kept in cents); each art_id\n# names a sprite symbol in static/socks.svg.\nSOCKS: list[Sock] = [\n    Sock(\"monday-heel\", \"The Monday Heel\", 900, \"sock-monday-heel\"),\n    Sock(\"static-cling\", \"Static Cling\", 1100, \"sock-static-cling\"),\n    Sock(\"argyle-karen\", \"Argyle Karen\", 1200, \"sock-argyle-karen\"),\n    Sock(\"lucky-odd\", \"The Lucky Odd\", 700, \"sock-lucky-odd\"),\n    Sock(\"off-duty-cloud\", \"Off-Duty Cloud\", 1000, \"sock-off-duty-cloud\"),\n    Sock(\"tuesdays-revenge\", \"Tuesday's Revenge\", 900, \"sock-tuesdays-revenge\"),\n]\n\n# The single in-memory shop state, shared by every router.\nSTATE = ShopState(SOCKS)\n\nrouter = APIRouter()\n\n\ndef _item(sock: Sock, stock: int) -> dict:\n    return {\n        \"id\": sock.id,\n        \"name\": sock.name,\n        \"price_cents\": sock.price_cents,\n        \"price\": sock.price_dollars,\n        \"art_id\": sock.art_id,\n        \"stock\": stock,\n    }\n\n\n@router.get(\"/api/catalog\")\ndef get_catalog() -> dict:\n    with get_tracer().start_as_current_span(\"catalog.list\"):\n        # Read each sock's live stock straight from the store, per item.\n        items = []\n        for sock in SOCKS:\n            stock = STATE.read_stock(sock.id)\n            items.append(_item(sock, stock))\n        return {\"socks\": items}\n"
+    }
+  ]
+}
