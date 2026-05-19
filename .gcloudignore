@@ -1,0 +1,29 @@
+# What `gcloud run deploy --source .` UPLOADS to Cloud Build from the repo
+# root (the Darn server image). NOTE: once this file exists, gcloud no longer
+# consults .gitignore — everything to skip must be listed here.
+# Keep web/ sources, server/, and shop/defects IN the upload: the root
+# Dockerfile builds the web bundle fresh and copies the defect payloads.
+
+.git
+.gitignore
+.gcloudignore
+.github/
+
+# dependency/venv/cache trees (huge, rebuilt inside the image)
+node_modules/
+.venv/
+venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+.vite/
+
+# built fresh by Dockerfile stage 1
+web/dist/
+
+# never upload local env/keys
+.env
+.env.*
+*.pem
+service-account*.json

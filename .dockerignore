@@ -1,0 +1,40 @@
+# Build context for the ROOT Dockerfile (the Darn server image).
+# The image needs exactly: web/ sources (stage 1 builds the bundle),
+# server/requirements.txt + server/app, and shop/defects. Everything else
+# stays out of the context.
+
+.git
+.github
+.gcloudignore
+.gitignore
+
+# dependency/venv/cache trees — never enter an image
+**/node_modules
+**/.venv
+**/__pycache__
+**/.pytest_cache
+**/.ruff_cache
+**/.vite
+**/*.pyc
+
+# stage 1 builds web/dist fresh — a stale local build must not leak in
+web/dist
+
+# not part of the runtime image
+server/tests
+server/pyproject.toml
+server/requirements-dev.txt
+
+# the shop is its own image; the Darn server only needs the defect payloads
+shop/**
+!shop/defects
+!shop/defects/**
+
+# the trafficbot is its own image
+trafficbot
+
+# env files / keys are never in the repo, but belt and braces
+.env
+.env.*
+*.pem
+service-account*.json
