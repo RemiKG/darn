@@ -1,0 +1,120 @@
+/* ============================================================
+   Darn. — design tokens (single source of truth)
+   Style: clean-trustworthy register. Cream base, ONE ink,
+   ONE amber. No red anywhere. Monospace for every live numeral.
+   @font-face URLs point at the self-hosted /fonts/.
+   ============================================================ */
+
+@font-face { font-family: "Baloo 2"; src: url("/fonts/baloo2-500.woff2") format("woff2"); font-weight: 500; font-display: block; }
+@font-face { font-family: "Baloo 2"; src: url("/fonts/baloo2-600.woff2") format("woff2"); font-weight: 600; font-display: block; }
+@font-face { font-family: "Baloo 2"; src: url("/fonts/baloo2-700.woff2") format("woff2"); font-weight: 700; font-display: block; }
+@font-face { font-family: "Baloo 2"; src: url("/fonts/baloo2-800.woff2") format("woff2"); font-weight: 800; font-display: block; }
+@font-face { font-family: "Inter"; src: url("/fonts/inter-400.woff2") format("woff2"); font-weight: 400; font-display: block; }
+@font-face { font-family: "Inter"; src: url("/fonts/inter-500.woff2") format("woff2"); font-weight: 500; font-display: block; }
+@font-face { font-family: "Inter"; src: url("/fonts/inter-600.woff2") format("woff2"); font-weight: 600; font-display: block; }
+@font-face { font-family: "Inter"; src: url("/fonts/inter-700.woff2") format("woff2"); font-weight: 700; font-display: block; }
+@font-face { font-family: "JetBrains Mono"; src: url("/fonts/jetbrainsmono-400.woff2") format("woff2"); font-weight: 400; font-display: block; }
+@font-face { font-family: "JetBrains Mono"; src: url("/fonts/jetbrainsmono-500.woff2") format("woff2"); font-weight: 500; font-display: block; }
+@font-face { font-family: "JetBrains Mono"; src: url("/fonts/jetbrainsmono-600.woff2") format("woff2"); font-weight: 600; font-display: block; }
+@font-face { font-family: "JetBrains Mono"; src: url("/fonts/jetbrainsmono-700.woff2") format("woff2"); font-weight: 700; font-display: block; }
+
+:root {
+  /* ---- color ---- */
+  --cream:       #F5F3EF;  /* page base */
+  --cream-2:     #EDEAE2;  /* deeper cream wash, wells/insets */
+  --card:        #FDFCFA;  /* warm white card surface */
+  --ink:         #1B2A44;  /* deep navy ink — text, stitches, primary actions */
+  --ink-soft:    rgba(27, 42, 68, 0.66);   /* secondary text */
+  --ink-faint:   rgba(27, 42, 68, 0.40);   /* tertiary text, idle thread */
+  --line:        rgba(27, 42, 68, 0.13);   /* hairlines, card borders */
+  --amber:       #E8A33D;  /* the ONE accent — breakage, attention, warmth */
+  --amber-deep:  #A9690F;  /* amber that passes contrast on cream (text/icons) */
+  --amber-wash:  #F7E8CE;  /* amber tint surface */
+  --amber-soft:  rgba(232, 163, 61, 0.16); /* faint amber field */
+
+  /* ---- type ---- */
+  --font-brand: "Baloo 2", system-ui, sans-serif;     /* wordmark + display only */
+  --font-ui:    "Inter", system-ui, sans-serif;        /* everything else */
+  --font-mono:  "JetBrains Mono", ui-monospace, monospace; /* numerals, DQL, IDs, code */
+
+  /* ---- shape ---- */
+  --r-card: 18px;
+  --r-btn:  14px;
+  --r-pill: 999px;
+  --shadow-card: 0 1px 2px rgba(27,42,68,0.05), 0 8px 28px rgba(27,42,68,0.07);
+  --shadow-pop:  0 2px 6px rgba(27,42,68,0.08), 0 16px 48px rgba(27,42,68,0.14);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+
+body {
+  background: var(--cream);
+  color: var(--ink);
+  font-family: var(--font-ui);
+  font-size: 15px;
+  line-height: 1.55;
+}
+
+/* every live number wears mono — no exceptions */
+.num, .mono {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+
+/* ---- buttons ---- */
+.btn {
+  display: inline-flex; align-items: center; gap: 10px;
+  border: none; cursor: pointer;
+  border-radius: var(--r-btn);
+  font-family: var(--font-ui); font-weight: 600; font-size: 15px;
+  padding: 13px 22px;
+  transition: transform .12s ease;
+}
+.btn-amber { background: var(--amber); color: var(--ink); box-shadow: 0 2px 0 rgba(27,42,68,0.18), var(--shadow-card); }
+.btn-ink   { background: var(--ink); color: var(--cream); }
+.btn-ghost { background: transparent; color: var(--ink); border: 1.5px solid var(--line); }
+
+/* ---- cards ---- */
+.card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--r-card);
+  box-shadow: var(--shadow-card);
+}
+
+/* ---- pills / status chips ---- */
+.pill {
+  display: inline-flex; align-items: center; gap: 7px;
+  border-radius: var(--r-pill);
+  font-size: 12.5px; font-weight: 600;
+  padding: 5px 12px;
+}
+.pill-ok    { background: rgba(27,42,68,0.07); color: var(--ink); }
+.pill-amber { background: var(--amber-wash); color: var(--amber-deep); }
+
+/* ---- stitched thread (the signature motif) ----
+   pending  = dashed faint thread
+   active   = dashed amber thread
+   done     = solid ink thread with whip-stitch ticks (SVG)      */
+.thread-pending { border-top: 2.5px dashed var(--ink-faint); }
+.thread-active  { border-top: 2.5px dashed var(--amber); }
+.thread-done    { border-top: 2.5px solid var(--ink); }
+
+/* ---- DQL receipt block ---- */
+.dql {
+  font-family: var(--font-mono);
+  font-size: 12.5px; line-height: 1.6;
+  background: var(--ink); color: #E9EDF4;
+  border-radius: 12px; padding: 14px 16px;
+  white-space: pre; overflow-x: auto;
+}
+.dql .kw { color: var(--amber); }
+
+/* ---- soft organic corner blob ---- */
+.blob {
+  position: absolute; border-radius: 50%;
+  filter: blur(2px); pointer-events: none;
+}
