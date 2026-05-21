@@ -1,0 +1,174 @@
+# Deploys — push to main redeploys whichever Cloud Run service changed.
+# This workflow is PART OF THE PRODUCT'S STORY: the demo pushes a sabotage
+# commit to main -> deploy-shop ships the tear to production -> Davis raises
+# the problem -> Darn's fix PR merges -> deploy-shop ships the mend.
+#
+# Required secrets:        GCP_SA_KEY (service-account JSON), GCP_PROJECT
+# Optional secrets:        DT_API_TOKEN, DT_CLASSIC_URL (deployment markers;
+#                          everything skips cleanly without them)
+# Optional repo variables: GCP_REGION (default us-central1),
+#                          DEMO_SERVICE_NAME (default loose-threads-shop)
+#
+# Runtime env vars (DT_*, GITHUB_*, SHOP_URL, ...) are managed ON the Cloud Run
+# services (set once, out of band). CI never touches them — no secret values
+# ever pass through these jobs' env-var flags or logs.
+
+name: deploy
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'server/**'
+      - 'web/**'
+      - 'shop/**'
+      - 'trafficbot/**'
+      - 'Dockerfile'
+      - '.github/workflows/deploy.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  # on.push.paths gates the whole workflow; per-service routing happens here.
+  changes:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      shop: ${{ steps.filter.outputs.shop }}
+      darn: ${{ steps.filter.outputs.darn }}
+      trafficbot: ${{ steps.filter.outputs.trafficbot }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            shop:
+              - 'shop/**'
+            darn:
+              - 'server/**'
+              - 'web/**'
+              - 'Dockerfile'
+            trafficbot:
+              - 'trafficbot/**'
+
+  deploy-shop:
+    needs: changes
+    if: needs.changes.outputs.shop == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    # Serialize shop deploys, never cancel one mid-flight: sabotage commit and
+    # fix merge can land minutes apart and BOTH must reach production, in order.
+    concurrency:
+      group: deploy-shop
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+      - uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+      - uses: google-github-actions/setup-gcloud@v2
+      - name: deploy loose-threads-shop
+        run: >
+          gcloud run deploy loose-threads-shop
+          --source shop
+          --region ${{ vars.GCP_REGION || 'us-central1' }}
+          --project ${{ secrets.GCP_PROJECT }}
+          --allow-unauthenticated
+          --quiet
+
+      # Deployment marker -> Dynatrace Events API v2 (CUSTOM_DEPLOYMENT).
+      # TIMING NOTE: the demo's "first failure +Ns after deploy" gap on the
+      # incident timing ruler is measured against THIS marker — it must fire
+      # immediately after the deploy succeeds, never before.
+      # Secrets are not readable in `if:` expressions, so the step guards in
+      # shell via env; it skips cleanly when Dynatrace isn't configured, and
+      # a failed marker never fails the deploy (continue-on-error).
+      - name: deployment marker
+        continue-on-error: true
+        env:
+          DT_API_TOKEN: ${{ secrets.DT_API_TOKEN }}
+          DT_CLASSIC_URL: ${{ secrets.DT_CLASSIC_URL }}
+          SERVICE_NAME: ${{ vars.DEMO_SERVICE_NAME || 'loose-threads-shop' }}
+        run: |
+          if [ -z "$DT_API_TOKEN" ] || [ -z "$DT_CLASSIC_URL" ]; then
+            echo "Dynatrace marker skipped — DT_API_TOKEN / DT_CLASSIC_URL not configured."
+            exit 0
+          fi
+          cat > /tmp/marker.json <<JSON
+          {
+            "eventType": "CUSTOM_DEPLOYMENT",
+            "title": "deploy ${GITHUB_SHA}",
+            "entitySelector": "type(SERVICE),entityName.equals(\"${SERVICE_NAME}\")",
+            "properties": {
+              "git.sha": "${GITHUB_SHA}",
+              "repo": "${GITHUB_REPOSITORY}",
+              "source": "github-actions"
+            }
+          }
+          JSON
+          curl -fsS -X POST "${DT_CLASSIC_URL%/}/api/v2/events/ingest" \
+            -H "Authorization: Api-Token ${DT_API_TOKEN}" \
+            -H "Content-Type: application/json" \
+            --data @/tmp/marker.json
+          echo
+          echo "deployment marker sent for ${GITHUB_SHA}"
+
+  deploy-darn:
+    needs: changes
+    if: needs.changes.outputs.darn == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    concurrency:
+      group: deploy-darn
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+      - uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+      - uses: google-github-actions/setup-gcloud@v2
+      # Context is the REPO ROOT (root Dockerfile builds web + server + the
+      # shop defect payloads into one image). --min-instances 1 and
+      # --no-cpu-throttling keep the Davis poller and incident timers running
+      # between requests. Env vars are managed on the service, not in CI.
+      - name: deploy darn
+        run: >
+          gcloud run deploy darn
+          --source .
+          --region ${{ vars.GCP_REGION || 'us-central1' }}
+          --project ${{ secrets.GCP_PROJECT }}
+          --allow-unauthenticated
+          --min-instances 1
+          --no-cpu-throttling
+          --quiet
+
+  deploy-trafficbot:
+    needs: changes
+    if: needs.changes.outputs.trafficbot == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    concurrency:
+      group: deploy-trafficbot
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+      - uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+      - uses: google-github-actions/setup-gcloud@v2
+      # Worker, not a website: NO --allow-unauthenticated (nothing calls it);
+      # --no-cpu-throttling + --min-instances 1 keep the shopping loop alive.
+      # SHOP_URL / RATE_RPM are managed on the service, not in CI.
+      - name: deploy darn-trafficbot
+        run: >
+          gcloud run deploy darn-trafficbot
+          --source trafficbot
+          --region ${{ vars.GCP_REGION || 'us-central1' }}
+          --project ${{ secrets.GCP_PROJECT }}
+          --no-cpu-throttling
+          --min-instances 1
+          --quiet
