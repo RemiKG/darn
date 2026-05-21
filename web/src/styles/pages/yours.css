@@ -1,0 +1,160 @@
+/* ============================================================
+   /yours — Use it on yours (wizard ⇄ Your watch).
+   Scoped under .yours so the generic class names (.step, .panel,
+   .input, …) can't leak into other pages. The stitched 3-step
+   progress thread (.pthread) lives in global.css already.
+   ============================================================ */
+
+/* this page column is 1080, narrower than the global 1200 wrap */
+.yours.wrap { max-width: 1080px; }
+
+/* ===== page header ===== */
+.yours .pagehead { padding: 52px 0 0; }
+.yours .pagehead h1 { font: 700 32px/1.2 var(--font-ui); color: var(--ink); }
+.yours .pagehead .sub { margin-top: 10px; font: 400 17px/1.55 var(--font-ui); color: var(--ink-soft); max-width: 62ch; }
+.yours .pagehead .scope { margin-top: 8px; font: 400 13px/1.5 var(--font-ui); color: var(--ink-faint); }
+
+/* ===== step cards ===== */
+.yours .step { margin-top: 26px; padding: 26px 28px 28px; }
+.yours .step.activecard { border: 2px solid var(--amber); }
+.yours .stephead { display: flex; align-items: center; gap: 14px; margin-bottom: 20px; }
+.yours .medal { width: 30px; height: 30px; border-radius: 50%; flex: none; display: flex; align-items: center; justify-content: center;
+  font: 600 14px var(--font-mono); }
+.yours .medal.done    { background: var(--ink); color: var(--cream); }
+.yours .medal.active  { background: var(--amber); color: var(--ink); }
+.yours .medal.pending { background: transparent; color: var(--ink-faint); border: 2px dashed var(--ink-faint); }
+.yours .stephead h2 { font: 700 17px var(--font-ui); color: var(--ink); }
+.yours .stephead h2 .num { font-weight: 600; }
+.yours .stephead .pill { margin-left: auto; }
+
+.yours .fields { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 18px; }
+.yours .field label { display: block; font: 600 13px var(--font-ui); color: var(--ink); margin-bottom: 7px; }
+.yours .input { display: block; width: 100%; border: 1.5px solid var(--line); border-radius: 10px; padding: 10px 13px; background: var(--card);
+  font: 400 13.5px var(--font-mono); color: var(--ink); letter-spacing: -0.01em; white-space: nowrap; overflow: hidden; }
+.yours .input::placeholder { color: var(--ink-faint); }
+.yours .helper { font: 400 13px/1.6 var(--font-ui); color: var(--ink-soft); margin-bottom: 10px; }
+.yours .helper .mono { font-size: 12.5px; }
+.yours .chips { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 16px; }
+.yours .chip { display: inline-flex; font: 400 12px var(--font-mono); color: var(--ink); background: var(--cream-2);
+  border: 1px solid var(--line); border-radius: 8px; padding: 4px 10px; white-space: nowrap; }
+.yours .chips .tail { font: 400 13px var(--font-ui); color: var(--ink-soft); }
+.yours .lockrow { display: flex; align-items: center; gap: 10px; background: var(--cream-2); border-radius: 10px;
+  padding: 10px 13px; font: 400 13px var(--font-ui); color: var(--ink-soft); margin-bottom: 20px; }
+.yours .lockrow svg { flex: none; }
+
+.yours .actions { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.yours .pushright { margin-left: auto; }
+.yours .okrow { display: inline-flex; align-items: center; gap: 9px; background: rgba(27,42,68,0.06); border-radius: 10px;
+  padding: 9px 14px; font: 500 13px var(--font-mono); color: var(--ink); }
+.yours .okrow .tick { color: var(--ink); font-weight: 700; }
+.yours .errrow { display: flex; align-items: baseline; background: var(--amber-wash); border-radius: 10px;
+  padding: 10px 14px; margin-top: 12px; font: 500 13px var(--font-ui); color: var(--amber-deep); }
+.yours .errrow .msg { flex: 1; }
+.yours .errrow .mono { font-size: 12.5px; }
+
+.yours .stepcopy { font: 400 14.5px/1.6 var(--font-ui); color: var(--ink); max-width: 72ch; margin-bottom: 16px; }
+.yours .perm { list-style: none; margin: 0 0 20px; display: flex; flex-direction: column; gap: 10px; }
+.yours .perm li { display: flex; align-items: baseline; gap: 11px; font: 400 14px var(--font-ui); color: var(--ink); }
+.yours .perm li::before { content: ""; width: 14px; height: 0; border-top: 2.5px solid var(--ink); flex: none;
+  transform: translateY(-3.5px); }
+.yours .perm b { font-weight: 600; }
+.yours .perm .why { color: var(--ink-soft); }
+
+/* honest note when the GitHub App isn't configured on this deployment */
+.yours .notewell { background: var(--amber-wash); border-radius: 10px; padding: 10px 14px; margin-top: 12px;
+  font: 400 13px/1.55 var(--font-ui); color: var(--ink-soft); max-width: 78ch; }
+
+/* ===== step 3 — map services ===== */
+.yours .map3 { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; margin-bottom: 6px; }
+.yours .panel { background: var(--cream-2); border-radius: 14px; padding: 16px 18px; }
+.yours .panel h3 { font: 600 11px var(--font-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 12px; }
+.yours .svc { display: flex; align-items: center; gap: 10px; padding: 7px 0; font: 400 13.5px var(--font-mono); color: var(--ink); }
+.yours .svc.faint, .yours .kv .v.faint { color: var(--ink-faint); }
+.yours .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--ink); flex: none; }
+.yours .dot.amber { background: var(--amber); }
+.yours .kv { display: flex; align-items: baseline; gap: 12px; padding: 7px 0; }
+.yours .kv .k { font: 600 13px var(--font-ui); color: var(--ink-soft); width: 110px; flex: none; }
+.yours .kv .v { font: 400 13.5px var(--font-mono); color: var(--ink); }
+.yours .maprows { margin: 14px 0 4px; }
+.yours .maprow { display: grid; grid-template-columns: 200px 36px 1fr auto; align-items: center; gap: 12px;
+  padding: 13px 2px; border-top: 1px solid var(--line); }
+.yours .maprow .svcname { font: 400 13.5px var(--font-mono); color: var(--ink); display: flex; align-items: center; gap: 10px; }
+.yours .maprow .arrow { color: var(--ink-faint); font: 400 14px var(--font-mono); text-align: center; }
+.yours .selwrap { position: relative; justify-self: start; display: inline-flex; }
+.yours .selwrap select { appearance: none; -webkit-appearance: none; cursor: pointer;
+  border: 1.5px solid var(--line); border-radius: 10px; padding: 8px 31px 8px 12px;
+  font: 400 13px var(--font-mono); color: var(--ink); background: var(--card); }
+.yours .selwrap select:disabled { cursor: not-allowed; }
+.yours .selwrap select.empty { color: var(--ink-faint); }
+.yours .selwrap .caret { position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+  color: var(--ink-faint); font: 400 11px var(--font-mono); pointer-events: none; }
+.yours .watch { display: flex; align-items: center; gap: 10px; font: 600 13px var(--font-ui); color: var(--ink); justify-self: end;
+  background: none; border: none; padding: 0; cursor: pointer; }
+.yours .watch:disabled { cursor: not-allowed; }
+.yours .tgl { width: 42px; height: 24px; border-radius: 999px; position: relative; flex: none; display: inline-block; }
+.yours .tgl.on { background: var(--ink); }
+.yours .tgl.on::after { content: ""; position: absolute; top: 3px; right: 3px; width: 18px; height: 18px; border-radius: 50%; background: var(--cream); }
+.yours .tgl.off { background: transparent; border: 1.5px solid var(--ink-faint); }
+.yours .tgl.off::after { content: ""; position: absolute; top: 2.5px; left: 2.5px; width: 16px; height: 16px; border-radius: 50%;
+  background: transparent; border: 1.5px solid var(--ink-faint); box-sizing: border-box; }
+.yours .watch.off { color: var(--ink-faint); }
+
+.yours .well-amber { background: var(--amber-wash); border-radius: 14px; padding: 18px 20px; margin: 20px 0; }
+.yours .well-amber .lead { font: 400 14px/1.6 var(--font-ui); color: var(--ink); max-width: 70ch; }
+.yours .snippet { position: relative; margin: 14px 0 12px; }
+.yours .snippet .dql { font-size: 12px; padding-right: 86px; }
+.yours .snippet .copybtn { position: absolute; top: 10px; right: 10px; background: rgba(245,243,239,0.14); color: #E9EDF4;
+  border: 1px solid rgba(245,243,239,0.25); border-radius: 999px; font: 500 11px var(--font-mono); padding: 4px 12px; }
+.yours .snippet .copybtn.copied { background: var(--cream); color: var(--ink); border-color: var(--cream); }
+.yours .well-amber .cap { font: 400 13px/1.55 var(--font-ui); color: var(--ink-soft); max-width: 78ch; }
+.yours .step .endrow, .yours .mapcard .endrow { display: flex; justify-content: flex-end; margin-top: 4px; }
+.yours .mapcard { margin-top: 14px; padding: 26px 28px 28px; }
+
+/* ===== connected state — Your watch ===== */
+.yours .yourhead { padding: 48px 0 0; display: flex; align-items: baseline; }
+.yours .yourhead h2 { font: 700 26px var(--font-ui); color: var(--ink); }
+.yours .watchgrid { --cols: 150px 96px 178px 118px 138px 108px 1fr; }
+.yours .thead { display: grid; grid-template-columns: var(--cols); gap: 14px; align-items: center;
+  padding: 22px 20px 8px; font: 500 11px var(--font-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--ink-faint); }
+.yours .trow { display: grid; grid-template-columns: var(--cols); gap: 14px; align-items: center; padding: 16px 20px; margin-top: 10px; }
+.yours .trow .mono { font-size: 13px; color: var(--ink); }
+.yours .trow .repo { font: 400 13px var(--font-mono); color: var(--ink); }
+.yours .trow .faint { color: var(--ink-faint); }
+.yours .trow .prs { font: 400 13px var(--font-mono); color: var(--ink); }
+.yours .trow .prs a { color: var(--ink); text-decoration: none; border-bottom: 1px dotted var(--ink-faint); margin-left: 5px; }
+.yours .trow .rowacts { display: flex; gap: 8px; justify-content: flex-end; }
+.yours .btn-xs { padding: 6px 13px; font-size: 12.5px; border-radius: 10px; font-weight: 600; }
+.yours .pill-watch { font-size: 12px; padding: 4px 11px; }
+.yours .addrow { display: block; width: 100%; margin-top: 14px; border: 1.5px dashed var(--ink-faint); border-radius: var(--r-card);
+  padding: 15px; text-align: center; font: 600 14px var(--font-ui); color: var(--ink-soft);
+  background: none; cursor: pointer; }
+
+.yours .mendshead { margin: 52px 0 16px; font: 700 20px var(--font-ui); color: var(--ink); }
+.yours .mends { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+.yours .mend { padding: 20px 22px; }
+.yours .mend .t { font: 600 15px var(--font-ui); color: var(--ink); margin-bottom: 8px; }
+.yours .mend .when { font: 400 13px var(--font-mono); color: var(--ink-soft); margin-bottom: 14px; }
+.yours .mend .row { display: flex; align-items: baseline; }
+.yours .mend .pr { font: 500 13px var(--font-mono); color: var(--ink); text-decoration: none; border-bottom: 1px dotted var(--ink-faint); }
+.yours .mend .rcpt { margin-left: auto; font: 600 13px var(--font-ui); color: var(--ink); text-decoration: none; }
+
+/* ===== footer danger card (ink border — NOT red) ===== */
+.yours .danger { margin-top: 52px; background: var(--card); border: 1.5px solid var(--ink); border-radius: var(--r-card);
+  padding: 24px 26px; }
+.yours .danger h3 { font: 700 17px var(--font-ui); color: var(--ink); margin-bottom: 8px; }
+.yours .danger p { font: 400 14px/1.6 var(--font-ui); color: var(--ink-soft); max-width: 72ch; margin-bottom: 18px; }
+.yours .danger .row { display: flex; align-items: center; gap: 16px; }
+.yours .danger .hint { font: 400 12px var(--font-mono); color: var(--ink-faint); }
+
+/* ===== typed-confirm modal (disconnect) ===== */
+.yours-modalback { position: fixed; inset: 0; background: rgba(27,42,68,0.20); z-index: 60;
+  display: flex; align-items: center; justify-content: center; }
+.yours-modal { width: 520px; max-width: calc(100vw - 48px); background: var(--card); border: 1.5px solid var(--ink);
+  border-radius: var(--r-card); box-shadow: var(--shadow-pop); padding: 26px 28px; }
+.yours-modal h3 { font: 700 17px var(--font-ui); color: var(--ink); margin-bottom: 8px; }
+.yours-modal p { font: 400 14px/1.6 var(--font-ui); color: var(--ink-soft); margin-bottom: 18px; }
+.yours-modal label { display: block; font: 600 13px var(--font-ui); color: var(--ink); margin-bottom: 7px; }
+.yours-modal .input { display: block; width: 100%; border: 1.5px solid var(--line); border-radius: 10px; padding: 10px 13px;
+  background: var(--card); font: 400 13.5px var(--font-mono); color: var(--ink); letter-spacing: -0.01em; }
+.yours-modal .input::placeholder { color: var(--ink-faint); }
+.yours-modal .mrow { display: flex; justify-content: flex-end; gap: 12px; margin-top: 18px; }

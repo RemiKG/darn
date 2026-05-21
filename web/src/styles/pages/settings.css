@@ -1,0 +1,165 @@
+/* ============================================================
+   Power user settings (/yours/settings) — page CSS.
+   Everything is scoped under .setpage / .setmodal so nothing
+   leaks into other pages (global.css already owns .chip/.page).
+   No red anywhere, ever.
+   ============================================================ */
+
+/* ===== page scaffold (renamed from .page — global .page is overflow:hidden,
+   which would break both sticky elements on this page) ===== */
+.setpage { max-width: 1112px; margin: 0 auto; padding: 44px 24px 0; }
+
+.setpage .pagehead { margin-bottom: 36px; }
+.setpage .crumb { font: 500 12px var(--font-mono); color: var(--ink-faint); letter-spacing: .02em; margin-bottom: 14px; }
+.setpage .pagehead h1 { font: 700 26px/1.25 var(--font-ui); color: var(--ink); }
+.setpage .pagehead .sub { margin-top: 8px; font: 400 15px/1.55 var(--font-ui); color: var(--ink-soft); max-width: 64ch; }
+
+.setpage .cols { display: flex; gap: 56px; align-items: flex-start; }
+
+/* ===== anchor nav ===== */
+.setpage .anchors { width: 200px; flex: 0 0 200px; position: sticky; top: 32px; display: flex; flex-direction: column; gap: 2px; }
+.setpage .anchors a { font: 600 14px/1.3 var(--font-ui); color: var(--ink-soft); text-decoration: none; padding: 8px 12px; border-radius: 9px; }
+.setpage .anchors a:hover { color: var(--ink); }
+.setpage .anchors a .t { display: inline-block; padding-bottom: 3px; border-bottom: 2px solid transparent; }
+.setpage .anchors a.current { color: var(--ink); }
+.setpage .anchors a.current .t { border-bottom: 2px dashed var(--amber); }
+
+/* ===== content column ===== */
+.setpage .content { width: 760px; flex: 0 0 760px; min-width: 0; }
+.setpage section { margin-bottom: 44px; scroll-margin-top: 24px; }
+.setpage .kick { display: flex; align-items: center; gap: 14px; margin: 0 2px 12px;
+  font: 600 12px var(--font-mono); letter-spacing: .14em; text-transform: uppercase; color: var(--ink-soft); }
+.setpage .kick .kn { color: var(--amber-deep); letter-spacing: .06em; }
+.setpage .kick::after { content: ""; flex: 1; border-top: 2px dashed var(--line); }
+
+/* ===== rows ===== */
+.setpage .sec-card { overflow: hidden; }
+.setpage .row { display: flex; align-items: center; justify-content: space-between; gap: 28px;
+  padding: 18px 24px; position: relative; }
+.setpage .row + .row { border-top: 1px solid var(--line); }
+.setpage .row.top { align-items: flex-start; }
+.setpage .row.top .ctl, .setpage .row.top .ctl-col { margin-top: 2px; }
+.setpage .left { max-width: 480px; }
+.setpage .lab { font: 600 14px/1.4 var(--font-ui); color: var(--ink); }
+.setpage .cap { margin-top: 3px; font: 400 13px/1.5 var(--font-ui); color: var(--ink-soft); }
+.setpage .cap .nb { display: inline-block; }
+/* the subtle amber thread underline on changed-but-unsaved rows */
+.setpage .row.unsaved::after { content: ""; position: absolute; left: 24px; right: 24px; bottom: 1px; height: 2px;
+  background: repeating-linear-gradient(90deg, var(--amber) 0 6px, transparent 6px 10px); opacity: .9; }
+
+/* control cluster — single right edge */
+.setpage .ctl { display: flex; align-items: center; justify-content: flex-end; gap: 10px; flex-shrink: 0; }
+.setpage .ctl-col { display: flex; flex-direction: column; align-items: flex-end; gap: 10px; flex-shrink: 0; }
+.setpage .ctl-line { display: flex; align-items: center; gap: 8px; }
+.setpage .ctl-line.dim { opacity: .45; }
+.setpage .hint { font: 500 11px var(--font-mono); color: var(--ink-faint); letter-spacing: .02em; }
+.setpage .arrow { font: 500 13px var(--font-mono); color: var(--ink-soft); }
+
+/* calm inline validation message (amber-deep, never red) */
+.setpage .err { font: 500 11px var(--font-mono); color: var(--amber-deep); letter-spacing: .02em; text-align: right; }
+
+/* ===== inputs ===== */
+.setpage .field { display: inline-flex; align-items: baseline; gap: 6px; background: var(--cream);
+  border: 1.5px solid var(--line); border-radius: 10px; padding: 7px 12px; }
+.setpage .field input { border: none; outline: none; background: transparent; padding: 0;
+  font: 500 14px var(--font-mono); font-variant-numeric: tabular-nums; letter-spacing: -0.01em;
+  color: var(--ink); text-align: right; }
+.setpage .field input::placeholder { color: var(--ink-faint); }
+.setpage .field .unit { font: 400 12.5px var(--font-mono); color: var(--ink-soft); white-space: nowrap; }
+.setpage .field:focus-within { outline: 2px solid var(--amber); outline-offset: 2px; }
+.setpage .field input:focus-visible { outline: none; }
+.setpage .field.dim { opacity: .45; }
+.setpage .field.dim input { cursor: not-allowed; }
+
+.setpage .ta { display: block; width: 260px; resize: none; background: var(--cream);
+  border: 1.5px solid var(--line); border-radius: 10px; padding: 10px 12px;
+  font: 500 12.5px/1.7 var(--font-mono); color: var(--ink); outline: none; }
+
+.setpage .selectbox { position: relative; display: inline-flex; align-items: center; gap: 9px; background: var(--cream);
+  border: 1.5px solid var(--line); border-radius: 10px; padding: 7px 12px;
+  font: 500 13px var(--font-mono); color: var(--ink); cursor: pointer; white-space: nowrap; }
+.setpage .selectbox .car { color: var(--ink-faint); font-size: 11px; }
+/* a real <select> rides invisibly on top — pixel-faithful and accessible */
+.setpage .selectbox select { position: absolute; inset: 0; width: 100%; height: 100%;
+  opacity: 0; cursor: pointer; border: none; }
+.setpage .selectbox:focus-within { outline: 2px solid var(--amber); outline-offset: 2px; }
+.setpage .selectbox.dim { opacity: .45; cursor: not-allowed; }
+.setpage .selectbox.dim select { pointer-events: none; }
+
+/* chips input */
+.setpage .chips { display: flex; align-items: center; flex-wrap: wrap; gap: 7px; width: 304px;
+  background: var(--cream); border: 1.5px solid var(--line); border-radius: 10px; padding: 7px 10px; cursor: text; }
+.setpage .chips .chip { display: inline-flex; align-items: center; gap: 7px; background: var(--card);
+  border: 1px solid var(--line); border-radius: var(--r-pill); padding: 3px 6px 3px 10px;
+  font: 500 12px var(--font-mono); color: var(--ink); }
+.setpage .chips .chip .x { display: inline-flex; align-items: center; justify-content: center; width: 15px; height: 15px;
+  border-radius: 50%; color: var(--ink-faint); font: 600 11px/1 var(--font-ui); cursor: pointer; }
+.setpage .chips .chip .x:hover { background: var(--cream-2); color: var(--ink); }
+.setpage .chips .chipin { flex: 1; min-width: 76px; border: none; outline: none; background: transparent;
+  font: 400 12px var(--font-ui); color: var(--ink); padding-left: 2px; }
+.setpage .chips .chipin::placeholder { color: var(--ink-faint); }
+.setpage .chips:focus-within { outline: 2px solid var(--amber); outline-offset: 2px; }
+
+/* ===== switches ===== */
+.setpage .sw { position: relative; width: 42px; height: 24px; border-radius: var(--r-pill); flex-shrink: 0; cursor: pointer; }
+.setpage .sw.on { background: var(--ink); }
+.setpage .sw.off { background: var(--cream-2); border: 1.5px solid var(--line); }
+.setpage .sw .knob { position: absolute; top: 3px; width: 18px; height: 18px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center; }
+.setpage .sw.on .knob { right: 3px; background: var(--cream); }
+.setpage .sw.off .knob { left: 2.5px; top: 1.5px; background: var(--card); border: 1px solid var(--line);
+  box-shadow: 0 1px 2px rgba(27,42,68,.10); }
+.setpage .sw.locked { cursor: not-allowed; }
+.setpage .sw .xst { display: block; }
+.setpage .swlab { font: 600 13px var(--font-ui); color: var(--ink-soft); white-space: nowrap; }
+.setpage .locktag { font: 500 11px var(--font-mono); letter-spacing: .04em; color: var(--ink-faint); white-space: nowrap; }
+
+/* ===== radios ===== */
+.setpage .radios { display: flex; flex-direction: column; gap: 9px; align-items: flex-start; }
+.setpage .radio { display: flex; align-items: center; gap: 9px; font: 500 13.5px var(--font-ui);
+  color: var(--ink-soft); cursor: pointer; white-space: nowrap; }
+.setpage .radio.sel { color: var(--ink); }
+.setpage .rdot { width: 16px; height: 16px; border-radius: 50%; border: 1.5px solid var(--ink-faint);
+  background: var(--card); flex-shrink: 0; position: relative; }
+.setpage .radio.sel .rdot { border-color: var(--ink); }
+.setpage .radio.sel .rdot::after { content: ""; position: absolute; inset: 3px; border-radius: 50%; background: var(--ink); }
+.setpage .radio .dflt { color: var(--ink-faint); }
+
+/* ===== static "what Darn stores" list ===== */
+.setpage .stores { list-style: none; margin-top: 10px; display: flex; flex-direction: column; gap: 7px; }
+.setpage .stores li { display: flex; align-items: baseline; gap: 11px; font: 400 13.5px/1.5 var(--font-ui); color: var(--ink); }
+.setpage .stores li::before { content: ""; width: 11px; flex-shrink: 0; border-top: 2px solid var(--ink-faint);
+  align-self: center; }
+.setpage .stores-tail { margin-top: 10px; font: 400 13px/1.5 var(--font-ui); color: var(--ink-soft); }
+
+/* ===== sticky save bar (slides in when dirty; ≤150ms) ===== */
+.setpage .savebar { position: sticky; bottom: 24px; z-index: 40; margin-top: 40px;
+  display: flex; align-items: center; justify-content: space-between; gap: 20px;
+  background: var(--card); border: 1px solid var(--line); border-radius: 16px;
+  box-shadow: var(--shadow-pop); padding: 12px 14px 12px 22px;
+  animation: setSaveIn .15s ease; }
+@keyframes setSaveIn { from { transform: translateY(14px); opacity: 0; } to { transform: none; opacity: 1; } }
+.setpage .savebar .note { display: flex; align-items: center; gap: 11px;
+  font: 500 13px var(--font-mono); font-variant-numeric: tabular-nums; color: var(--ink-soft); }
+.setpage .savebar .note .tick { width: 18px; border-top: 2px dashed var(--amber); }
+.setpage .savebar .note .err { font-size: 12px; }
+.setpage .savebar .acts { display: flex; align-items: center; gap: 10px; }
+.setpage .savebar .btn { padding: 10px 18px; font-size: 14px; border-radius: 12px; }
+
+/* ===== typed-confirm modal (dimmed 20% ink backdrop) ===== */
+.setmodal-backdrop { position: fixed; inset: 0; z-index: 60; background: rgba(27,42,68,.20);
+  display: flex; align-items: center; justify-content: center; padding: 24px; }
+.setmodal { width: 460px; max-width: 100%; background: var(--card); border: 1px solid var(--line);
+  border-radius: var(--r-card); box-shadow: var(--shadow-pop); padding: 26px 28px; }
+.setmodal h2 { font: 700 18px/1.3 var(--font-ui); color: var(--ink); }
+.setmodal .body { margin-top: 8px; font: 400 13.5px/1.55 var(--font-ui); color: var(--ink-soft); }
+.setmodal .body .mono { color: var(--ink); }
+.setmodal .confirm { display: flex; margin-top: 16px; background: var(--cream);
+  border: 1.5px solid var(--line); border-radius: 10px; padding: 7px 12px; }
+.setmodal .confirm input { width: 100%; border: none; outline: none; background: transparent; padding: 0;
+  font: 500 14px var(--font-mono); letter-spacing: -0.01em; color: var(--ink); }
+.setmodal .confirm input::placeholder { color: var(--ink-faint); }
+.setmodal .confirm:focus-within { outline: 2px solid var(--amber); outline-offset: 2px; }
+.setmodal .confirm input:focus-visible { outline: none; }
+.setmodal .err { display: block; margin-top: 10px; font: 500 11px var(--font-mono); color: var(--amber-deep); }
+.setmodal .acts { margin-top: 20px; display: flex; justify-content: flex-end; gap: 10px; }

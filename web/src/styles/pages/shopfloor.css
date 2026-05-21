@@ -1,0 +1,141 @@
+/* ============================================================
+   Shop floor (route "/") — page CSS. Every selector is scoped
+   under .sf (the page root) so nothing leaks into other pages.
+   Shared classes (.wrap, .h2/.h3, .blob, .card, .pill, .btn,
+   .thread-svg, .tstages, .axis, .spark, .dql…) live in
+   global.css / tokens.css and are NOT redefined here.
+   ============================================================ */
+
+/* ===== (a) hero ===== */
+.sf .hero { display: grid; grid-template-columns: 1fr 460px; gap: 56px; align-items: start; padding-top: 72px; }
+.sf .display { font: 700 34px/1.22 var(--font-ui); letter-spacing: -0.01em; margin-top: 30px; }
+.sf .herosub { font: 400 17px/1.6 var(--font-ui); color: var(--ink-soft); max-width: 52ch; margin-top: 16px; }
+.sf .ctas { display: flex; gap: 14px; margin-top: 32px; }
+.sf .micro { font: 500 13px var(--font-ui); color: var(--ink-faint); margin-top: 18px; }
+
+/* ===== (b) health card ===== */
+.sf .health { width: 460px; padding: 24px 26px 20px; position: relative; }
+.sf .health .tick { position: absolute; top: 0; left: 36px; width: 40px; border-top: 2px dashed var(--amber); }
+.sf .health .tick.stitching { animation: sfTickStitch .9s ease-out; }
+@keyframes sfTickStitch { from { width: 0; } to { width: 40px; } }
+.sf .hh { display: flex; align-items: center; gap: 10px; }
+.sf .hh .name { font: 700 16px var(--font-ui); }
+.sf .hh .right { margin-left: auto; display: flex; align-items: center; gap: 12px; }
+.sf .stats { display: flex; justify-content: space-between; margin-top: 24px; padding: 0 6px 0 2px; }
+.sf .stat .v { font: 600 28px var(--font-mono); font-variant-numeric: tabular-nums; letter-spacing: -0.02em; line-height: 1.1; }
+.sf .stat .v .u { font-size: 15px; font-weight: 500; color: var(--ink-soft); }
+.sf .stat .v.warn { color: var(--amber-deep); }
+.sf .stat .l { font: 500 11.5px var(--font-mono); color: var(--ink-soft); margin-top: 5px; }
+/* honest 'unavailable' caption — calm, amber-wash well, never red */
+.sf .hwhy { margin-top: 16px; background: var(--amber-wash); border-radius: 12px;
+  padding: 10px 14px; font: 400 13px/1.5 var(--font-ui); color: var(--ink-soft); }
+.sf .sparkhead { display: flex; justify-content: flex-end; margin-top: 18px; }
+.sf .sparkhead span { font: 500 10px var(--font-mono); color: var(--ink-faint); letter-spacing: .06em; }
+.sf .health .spark { height: 60px !important; margin-top: 4px; }
+.sf .hfoot { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--line); margin-top: 16px; padding-top: 14px; }
+.sf .hfoot .meta { font: 500 12px var(--font-mono); color: var(--ink-soft); }
+.sf .hfoot a { font: 600 13px var(--font-ui); color: var(--ink); text-decoration: none; }
+
+/* ===== section rhythm ===== */
+.sf section.block { margin-top: 104px; }
+.sf .blocksub { font: 400 15px/1.6 var(--font-ui); color: var(--ink-soft); margin-top: 10px; max-width: 78ch; }
+
+/* ===== (c) tear a hole in it ===== */
+.sf .defects { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 32px; }
+.sf .defect { position: relative; padding: 20px 18px 16px; display: flex; flex-direction: column; gap: 10px;
+  cursor: pointer; text-align: left; }
+.sf .defect .radio { position: absolute; top: 16px; right: 16px; width: 16px; height: 16px; border-radius: 50%;
+  border: 1.5px solid var(--ink-faint); }
+.sf .defect.sel { border-color: var(--amber); box-shadow: inset 0 0 0 1px var(--amber), var(--shadow-card); background: var(--amber-wash); }
+.sf .defect.sel .radio { border: 1.5px solid var(--amber-deep); background: radial-gradient(circle, var(--amber-deep) 0 4px, transparent 4.5px); }
+.sf .defect .dn { font: 700 15px var(--font-ui); }
+.sf .defect .dd { font: 400 13px/1.5 var(--font-ui); color: var(--ink-soft); flex: 1; }
+.sf .defect .davis { font: 500 12px/1.55 var(--font-mono); color: var(--ink-soft); border-top: 1px dashed var(--line); padding-top: 10px; min-height: 66px; }
+.sf .defect .davis b { display: block; font-weight: 500; color: var(--ink-faint); }
+.sf .defect.sel .davis { border-top-color: rgba(169,105,15,.25); }
+.sf .shiprow { display: flex; align-items: center; gap: 24px; margin-top: 28px; }
+.sf .shipnote { font: 400 13px/1.5 var(--font-ui); color: var(--ink-soft); }
+.sf .repolink { display: inline-block; font: 500 12px var(--font-mono); color: var(--ink); text-decoration: none; margin-top: 4px; }
+/* the button area after a 201 tear — mono progress row fed by real receipts */
+.sf .shipprog { display: inline-flex; align-items: center; gap: 10px; padding: 13px 0; min-height: 49px;
+  font: 500 13px var(--font-mono); color: var(--ink-soft); }
+.sf .shipprog .pdot { width: 8px; height: 8px; border-radius: 50%; background: var(--amber);
+  animation: pulse 2.4s ease-out infinite; flex: none; }
+/* calm not-configured banner — honest, amber-wash, no red */
+.sf .notconf { background: var(--amber-wash); border: 1px solid rgba(232,163,61,.45); border-radius: var(--r-card);
+  padding: 20px 24px; margin-top: 28px; font: 400 14px/1.6 var(--font-ui); color: var(--ink); max-width: 760px; }
+
+/* spectator banner — incident already live (single-incident lock) */
+.sf .spectator { background: var(--amber-wash); border: 1px solid rgba(232,163,61,.45); border-radius: var(--r-card);
+  box-shadow: var(--shadow-card); padding: 32px 34px; margin-top: 32px;
+  display: flex; flex-direction: column; justify-content: center; align-items: flex-start; gap: 12px; }
+.sf .spectator h3 { font: 700 22px/1.25 var(--font-ui); letter-spacing: -0.01em; }
+.sf .spectator .stageline { font: 500 13px var(--font-mono); color: var(--amber-deep); }
+.sf .spectator .btn { margin-top: 10px; }
+
+/* cooldown banner */
+.sf .cooldown { background: var(--cream-2); border: 1px solid var(--line); border-radius: var(--r-card);
+  padding: 32px 36px; margin-top: 32px; }
+.sf .cooldown h3 { font: 700 19px/1.3 var(--font-ui); letter-spacing: -0.01em; }
+.sf .cooldown p { font: 400 13px/1.5 var(--font-ui); color: var(--ink-soft); margin-top: 8px; }
+
+/* ===== (d) the mend, live ===== */
+.sf .lastmend { font: 500 12.5px var(--font-mono); color: var(--ink-soft); margin-top: 10px; }
+.sf .mend .thread-svg { margin-top: 40px; }
+.sf .mendlink { display: block; color: inherit; text-decoration: none; cursor: pointer; }
+.sf .byonote { font: 400 13px var(--font-ui); color: var(--ink-faint); margin-top: 36px; }
+
+/* ===== (e) receipts, not promises ===== */
+.sf .minis { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 28px; }
+.sf .mini { padding: 18px 20px; display: flex; flex-direction: column; gap: 9px; }
+.sf .minilabel { font: 600 10px var(--font-mono); letter-spacing: .14em; text-transform: uppercase; color: var(--ink-faint); }
+.sf .mini .titlerow { display: flex; align-items: center; gap: 9px; font: 600 14px var(--font-ui); }
+.sf .mini .ml { font: 500 12px var(--font-mono); color: var(--ink); }
+.sf .mini .ml.soft { color: var(--ink-soft); }
+.sf .mini .chip { align-self: flex-start; display: inline-flex; background: var(--amber-wash); color: var(--amber-deep);
+  border: none; font: 500 11px var(--font-mono); border-radius: var(--r-pill); padding: 4px 10px; }
+.sf .mini .dqlwrap { margin-top: 2px; }
+.sf .mini .dql { font-size: 11px; line-height: 1.62; white-space: pre-wrap; word-break: break-word; padding: 12px 14px; }
+.sf .mini .dqlwrap.tight .dql { padding-right: 14px; }
+.sf .mini .copybtn { top: 9px; right: 9px; font: 600 10.5px var(--font-ui); background: transparent;
+  border: 1px solid rgba(233,237,244,.32); border-radius: 8px; padding: 3px 9px; }
+.sf .mini .copybtn svg { display: none; }
+.sf .mini .toc { font: 500 11px/1.7 var(--font-mono); color: var(--ink-soft); }
+.sf .mini .ci { font: 500 11.5px var(--font-mono); color: var(--ink-soft); border-top: 1px dashed var(--line); padding-top: 9px; margin-top: auto; }
+.sf .mini .placeholder { font: 400 13px/1.5 var(--font-ui); color: var(--ink-faint); }
+
+/* ===== (f) medic teaser — the one dark moment on the page ===== */
+.sf .medic { margin-top: 104px; background: var(--ink); border-radius: var(--r-card); padding: 46px 48px;
+  display: grid; grid-template-columns: 1fr 360px; gap: 56px; align-items: center; box-shadow: var(--shadow-card); }
+.sf .medic h3 { font: 700 24px/1.25 var(--font-ui); color: #FDFCFA; letter-spacing: -0.01em; }
+.sf .medic p { font: 400 15px/1.6 var(--font-ui); color: rgba(245,243,239,.7); margin-top: 12px; max-width: 58ch; }
+.sf .medic .btn-onink { margin-top: 26px; }
+.sf .medic svg { display: block; width: 100%; height: auto; }
+
+/* ===== (g) mended strip ===== */
+.sf .mrow { display: flex; gap: 16px; margin-top: 24px; overflow-x: auto; padding-bottom: 4px; }
+.sf .mcard { flex: 1 0 282px; padding: 18px 20px; display: flex; flex-direction: column; gap: 8px; }
+.sf .mcard .mn { font: 600 14px var(--font-ui); }
+.sf .mcard .mt { font: 500 12px var(--font-mono); color: var(--ink-soft); }
+.sf .mcard .mlinks { display: flex; align-items: center; justify-content: space-between; margin-top: 8px; border-top: 1px dashed var(--line); padding-top: 10px; }
+.sf .mcard .mlinks .pr { font: 500 12px var(--font-mono); color: var(--ink); text-decoration: none; }
+.sf .mcard .mlinks .rc { font: 600 13px var(--font-ui); color: var(--ink); text-decoration: none; }
+
+/* ===== (h) what darn won't do ===== */
+.sf .wontcard { background: var(--card); border: 1px solid var(--line); border-radius: var(--r-card); padding: 34px 38px; margin-top: 24px; }
+.sf .wontcard ul { list-style: none; margin-top: 4px; }
+.sf .wontcard li { font: 400 15px/1.6 var(--font-ui); color: var(--ink-soft); padding: 13px 0; }
+.sf .wontcard li + li { border-top: 1px solid var(--line); }
+.sf .wontcard li b { font-weight: 600; color: var(--ink); }
+.sf .wontfoot { font: 600 13px var(--font-ui); color: var(--ink-soft); margin-top: 18px; }
+
+/* ===== (i) BYO band ===== */
+.sf .byo { margin-top: 104px; background: var(--cream-2); padding: 64px 40px; text-align: center; }
+.sf .byo h3 { font: 700 22px/1.3 var(--font-ui); letter-spacing: -0.01em; }
+.sf .byo p { font: 400 15px/1.6 var(--font-ui); color: var(--ink-soft); max-width: 64ch; margin: 12px auto 0; }
+.sf .byo .btn { margin-top: 28px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .sf .health .tick.stitching { animation: none; }
+  .sf .shipprog .pdot { animation: none; }
+}
