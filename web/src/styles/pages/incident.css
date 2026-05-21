@@ -1,0 +1,100 @@
+/* ============================================================
+   Incident view + The medic's heartbeat drawer — page-specific
+   CSS. Shared grammar (.stage/.lane spine, .glabel, .well,
+   .chip, .copybtn, .dqlwrap, .rtable, .diff, a.go, buttons,
+   pills) lives in global.css — nothing here duplicates it.
+   Everything is scoped under .incident-page / .hb-* / .dc-* so
+   no other page is touched.
+   ============================================================ */
+
+/* ===== header band ===== */
+.incident-page .hband { padding: 40px 0 32px; }
+.incident-page .crumb { font: 400 12px var(--font-mono); color: var(--ink-soft); letter-spacing: .01em; }
+.incident-page .crumb a { color: var(--ink-soft); text-decoration: none; border-bottom: 1px solid var(--line); }
+.incident-page .h1row { display: flex; align-items: center; gap: 16px; margin-top: 12px; }
+.incident-page .h1row h1 { font: 700 26px/1.2 var(--font-ui); color: var(--ink); }
+.incident-page .metarow { display: flex; align-items: center; gap: 16px; margin-top: 14px; }
+.incident-page .meta { font: 400 13px var(--font-mono); color: var(--ink-soft); }
+.incident-page .meta .sep { color: var(--ink-faint); padding: 0 2px; }
+.incident-page .metarow .spring { flex: 1; }
+
+/* ===== ledger: stage cards hung on the vertical thread =====
+   (.stage / .lane grammar comes from global.css) */
+.incident-page .ledger { margin-top: 8px; }
+/* first/last/knot geometry must win over the active/pending dash variants
+   (global.css declares the variants later in the file) */
+.incident-page .stage .lane.first::before { top: 28px; }
+.incident-page .stage .lane.last::before { top: 0; bottom: auto; height: 28px; }
+.incident-page .stage .lane.first.last::before { top: 28px; height: 0; }
+.incident-page .stage .lane.knotted::before { top: 0; bottom: auto; height: 96px; }
+.incident-page .scard { background: var(--card); border: 1px solid var(--line); border-radius: var(--r-card);
+  box-shadow: var(--shadow-card); overflow: hidden; }
+.incident-page .shead { height: 56px; display: flex; align-items: center; gap: 14px; padding: 0 24px;
+  border-bottom: 1px solid var(--line); }
+.incident-page .scard.collapsed .shead { border-bottom: none; }
+.incident-page .shead.clickable { cursor: pointer; }
+.incident-page .sidx { font: 600 12px var(--font-mono); color: var(--ink-faint); }
+.incident-page .sname { font: 700 15px var(--font-ui); color: var(--ink); white-space: nowrap; }
+.incident-page .skey { flex: 1; font: 400 12.5px var(--font-mono); color: var(--ink-soft);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.incident-page .skey .sep { color: var(--ink-faint); padding: 0 3px; }
+.incident-page .selapsed { font: 600 13px var(--font-mono); color: var(--ink); }
+.incident-page .stage.pending .selapsed { color: var(--ink-faint); }
+.incident-page .sbody { padding: 24px; }
+.incident-page .lead { font: 400 15px var(--font-ui); color: var(--ink); }
+.incident-page .cap { font: 400 13px var(--font-ui); color: var(--ink-soft); }
+.incident-page .cap .num, .incident-page .meta .num { color: inherit; }
+.incident-page .lead + .glabel { margin-top: 24px; }
+
+/* stage-2 result tables: numeral columns right-aligned */
+.incident-page .rtable th + th, .incident-page .rtable td + td { text-align: right; }
+
+/* honest waiting line (active stage, receipts not yet emitted) */
+.incident-page .waiting { display: flex; align-items: baseline; gap: 14px;
+  font: 400 14px var(--font-ui); color: var(--ink-soft); }
+.incident-page .waiting .num { color: var(--ink); }
+
+/* ===== davis problem card ===== */
+.incident-page .davis { padding: 18px 20px; }
+.incident-page .davis .top { display: flex; align-items: center; gap: 12px; }
+.incident-page .sev { width: 34px; height: 34px; border-radius: 10px; background: var(--amber-wash);
+  display: inline-flex; align-items: center; justify-content: center; flex: none; }
+.incident-page .sev.ok { background: rgba(27,42,68,.07); }
+.incident-page .davis .ttl { font: 700 15px var(--font-ui); color: var(--ink); }
+.incident-page .davis .sub { font: 400 12px var(--font-mono); color: var(--ink-soft); margin-top: 2px; }
+.incident-page .davis .grid { display: grid; grid-template-columns: repeat(3, auto); gap: 6px 40px;
+  margin: 14px 0 0 46px; }
+.incident-page .kv .k { font: 600 11px var(--font-ui); letter-spacing: .05em; text-transform: uppercase; color: var(--ink-soft); }
+.incident-page .kv .v { font: 400 13px var(--font-mono); color: var(--ink); margin-top: 2px; display: flex; align-items: center; gap: 8px; }
+.incident-page .davis .chips { display: flex; gap: 8px; margin: 14px 0 0 46px; }
+.incident-page .minicopy.copied { padding: 2px 8px; border-radius: var(--r-pill); }
+
+.incident-page .receiptrow { display: flex; align-items: center; gap: 16px; margin-top: 16px; }
+
+/* ===== exception result + knot evidence wells ===== */
+.incident-page .excwell { margin-top: 12px; padding: 14px 16px;
+  font: 400 12.5px/1.7 var(--font-mono); color: var(--ink); white-space: pre; overflow-x: auto; }
+.incident-page .excwell .soft { color: var(--ink-soft); }
+.incident-page .evwell { margin-top: 12px; padding: 12px 16px;
+  font: 400 12.5px var(--font-mono); color: var(--ink); white-space: pre-wrap; }
+
+/* ===== span tree ===== */
+.incident-page .spans { overflow: hidden; padding: 0; }
+.incident-page .spans .ph { display: flex; justify-content: space-between; padding: 8px 14px;
+  background: var(--cream-2); border-bottom: 1px solid var(--line);
+  font: 400 11px var(--font-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--ink-soft); }
+.incident-page .sprow { display: flex; align-items: center; gap: 10px; padding: 7px 14px;
+  font: 400 12.5px var(--font-mono); color: var(--ink); border-top: 1px solid var(--line); }
+.incident-page .sprow:first-of-type { border-top: none; }
+.incident-page .sprow .tree { color: var(--ink-faint); white-space: pre; }
+.incident-page .sprow .nm { flex: 1; white-space: pre; }
+.incident-page .sprow .ms { color: var(--ink-soft); }
+.incident-page .sprow.fail { background: var(--amber-wash); }
+.incident-page .badge500 { font: 700 11px var(--font-mono); background: var(--amber); color: var(--ink);
+  border-radius: var(--r-pill); padding: 2px 9px; letter-spacing: .02em; }
+
+/* ===== timing ruler ===== */
+.incident-page .ruler { position: relative; height: 104px; margin: 20px 8px 4px; }
+.incident-page .ruler .seg { position: absolute; top: 56px; height: 0; border-top: 2.5px solid var(--ink); }
+.incident-page .ruler .seg.a { left: 0; width: 64%; }
+.incident-page .ruler .seg.b { left: 68.4%; right: 0; }
