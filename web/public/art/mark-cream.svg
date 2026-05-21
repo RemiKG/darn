@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 100 100">
+  <!-- Darn. app mark — woven darning patch on cream tile -->
+  <rect width="100" height="100" rx="22" fill="#EDEAE2"/>
+  <g transform="translate(18,18) scale(0.64)">
+    <g stroke="#E8A33D" stroke-width="9" stroke-linecap="round" fill="none">
+      <line x1="32" y1="16" x2="32" y2="84"/>
+      <line x1="50" y1="9"  x2="50" y2="91"/>
+      <line x1="68" y1="16" x2="68" y2="84"/>
+    </g>
+    <g stroke="#1B2A44" stroke-width="9" stroke-linecap="round" fill="none">
+      <line x1="37.5" y1="32" x2="62.5" y2="32"/>
+      <line x1="74" y1="32" x2="84" y2="32"/>
+      <line x1="16" y1="32" x2="26" y2="32"/>
+      <line x1="12" y1="50" x2="44.5" y2="50"/>
+      <line x1="55.5" y1="50" x2="88" y2="50"/>
+      <line x1="37.5" y1="68" x2="62.5" y2="68"/>
+      <line x1="74" y1="68" x2="84" y2="68"/>
+      <line x1="16" y1="68" x2="26" y2="68"/>
+    </g>
+  </g>
+</svg>
