@@ -78,3 +78,163 @@ a.go.soft { font-weight: 600; font-size: 13px; color: var(--ink-soft); border-bo
 .livestrip a { color: var(--amber-deep); font-weight: 700; text-decoration: none; }
 
 /* ---------- chrome: footer ---------- */
+.footer { margin-top: 96px; background: var(--cream-2); padding: 40px; display: flex;
+  align-items: center; justify-content: space-between; }
+.footer .says { font: 600 16px var(--font-ui); color: var(--ink); }
+.footer .links { display: flex; gap: 22px; margin-top: 10px; }
+.footer .links a { font: 500 13px var(--font-ui); color: var(--ink-soft); text-decoration: none; }
+.footer img, .footer svg { opacity: .5; }
+
+/* live pulsing dot (health card) */
+.livedot { display: inline-flex; align-items: center; gap: 6px; font: 500 10px var(--font-mono); color: var(--ink-faint); }
+.livedot i { width: 8px; height: 8px; border-radius: 50%; background: var(--amber); animation: pulse 2.4s ease-out infinite; }
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(232,163,61,.45); }
+  70% { box-shadow: 0 0 0 7px rgba(232,163,61,0); }
+  100% { box-shadow: 0 0 0 0 rgba(232,163,61,0); }
+}
+
+/* ---------- the thread (signature motif) ---------- */
+/* horizontal timeline svg */
+.thread-svg { display: block; width: 100%; height: 44px; }
+/* animated dash-offset for the active amber segment (dasharray 7 6 => period 13) */
+.dash-anim { animation: threadDash .9s linear infinite; }
+@keyframes threadDash { from { stroke-dashoffset: 0; } to { stroke-dashoffset: -13; } }
+
+/* timeline stage labels under the thread (named `.tstage` to avoid
+   colliding with the incident ledger rows) */
+.tstages { display: grid; margin-top: 2px; }
+.tstage { text-align: center; font: 600 13px var(--font-ui); color: var(--ink-faint); }
+.tstage.done, .tstage.active { color: var(--ink); }
+.tstage .ts { display: block; font: 500 12px var(--font-mono); color: var(--ink-soft); margin-top: 5px; }
+.tstage.active .ts { color: var(--amber-deep); }
+
+/* vertical spine: ledger stage rows hung on a thread.
+   Variant classes work on either the row (`.stage.active`) or the lane itself
+   (`.lane.active`). */
+.stage { display: grid; grid-template-columns: 80px 1fr; }
+.lane { position: relative; }
+.lane::before { content: ""; position: absolute; left: 38.75px; top: 0; bottom: 0;
+  width: 2.5px; background: var(--ink); }            /* solid ink = done */
+.stage.first .lane::before, .lane.first::before { top: 28px; }
+.stage.last .lane::before,  .lane.last::before  { bottom: auto; height: 28px; }
+.lane .hang { position: absolute; left: 40px; right: 0; top: 26.75px; height: 2.5px; background: var(--ink); }
+.lane .node { position: absolute; left: 40px; top: 28px; transform: translate(-50%,-50%);
+  width: 14px; height: 14px; border-radius: 50%; background: var(--ink);
+  box-shadow: 0 0 0 4px var(--cream); z-index: 1; }
+.stage .body { padding-bottom: 32px; min-width: 0; }
+
+/* amber-dash lane variant (active-stage grammar; `.demo` kept as a legacy alias) */
+.stage.demo .lane::before, .stage.active .lane::before, .lane.active::before {
+  background: none; width: 0; border-left: 2.5px dashed var(--amber); top: 0; bottom: 0; }
+.stage.demo .lane .node, .stage.active .lane .node, .lane.active .node { background: var(--amber); }
+.stage.demo .lane .hang, .stage.active .lane .hang, .lane.active .hang {
+  background: none; border-top: 2.5px dashed var(--amber); height: 0; }
+
+/* faint-dash lane variant (pending-stage grammar) */
+.stage.pending .lane::before, .lane.pending::before {
+  background: none; width: 0; border-left: 2.5px dashed var(--ink-faint); top: 0; bottom: 0; }
+.stage.pending .lane .node, .lane.pending .node {
+  background: var(--cream); border: 2px solid var(--ink-faint); }
+.stage.pending .lane .hang, .lane.pending .hang {
+  background: none; border-top: 2.5px dashed var(--ink-faint); height: 0; }
+
+/* knot lane variant (tied off) */
+.stage.knotted .lane::before, .lane.knotted::before { top: 0; height: 96px; bottom: auto; }
+.stage.knotted .lane .knot, .lane.knotted .knot {
+  position: absolute; left: 40px; top: 96px; transform: translateX(-50%); }
+
+/* stitched 3-step progress thread */
+.pthread { display: flex; margin: 44px 0 10px; }
+.pseg { flex: 1; position: relative; padding-top: 0; }
+.pseg::before { content: ""; position: absolute; left: 40px; right: 0; top: 13px; }
+.pseg.done::before    { border-top: 2.5px solid var(--ink); }
+.pseg.active::before  { border-top: 2.5px dashed var(--amber); }
+.pseg.pending::before { border-top: 2.5px dashed var(--ink-faint); }
+.pnode { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  font: 600 13px var(--font-mono); position: relative; z-index: 1; }
+.pseg.done .pnode    { background: var(--ink); color: var(--cream); }
+.pseg.active .pnode  { background: var(--amber); color: var(--ink); box-shadow: 0 0 0 5px var(--amber-soft); }
+.pseg.pending .pnode { background: var(--cream); color: var(--ink-faint); border: 2px dashed var(--ink-faint); }
+.plabel { margin-top: 12px; font: 600 14px var(--font-ui); color: var(--ink); }
+.pseg.pending .plabel { color: var(--ink-faint); }
+.pstate { margin-top: 2px; font: 500 11px var(--font-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--ink-faint); }
+.pseg.active .pstate { color: var(--amber-deep); }
+
+/* ---------- receipt group label: short stitch + name ---------- */
+.glabel { display: flex; align-items: center; gap: 10px; margin: 32px 0 12px; }
+.glabel:first-child { margin-top: 0; }
+.glabel .stitch { width: 18px; border-top: 2.5px solid var(--amber); }
+.glabel .t { font: 700 14px var(--font-ui); color: var(--ink); }
+
+/* ---------- wells & chips ---------- */
+.well { background: var(--cream); border: 1px solid var(--line); border-radius: 12px; }
+.chip { display: inline-flex; align-items: center; gap: 6px; background: var(--cream-2);
+  border: 1px solid var(--line); border-radius: var(--r-pill);
+  font: 400 12px var(--font-mono); color: var(--ink); padding: 4px 11px; }
+.chip-amber { background: var(--amber-wash); color: var(--amber-deep); border: none;
+  font: 500 11px var(--font-mono); padding: 4px 10px; }
+
+/* ---------- copy buttons (flips to "Copied ✓" ink pill) ---------- */
+.copybtn { display: inline-flex; align-items: center; gap: 6px; cursor: pointer;
+  background: var(--card); border: 1px solid var(--line); border-radius: var(--r-pill);
+  font: 600 12px var(--font-ui); color: var(--ink); padding: 5px 12px;
+  transition: background .12s ease, color .12s ease, border-color .12s ease; }
+.copybtn svg { display: block; }
+.copybtn.copied { background: var(--ink); color: var(--cream); border-color: var(--ink); }
+.minicopy { cursor: pointer; background: none; border: none; padding: 0; color: var(--ink-faint); display: inline-flex; }
+
+/* ---------- DQL block wrapper ---------- */
+.dqlwrap { position: relative; }
+.dqlwrap .copybtn { position: absolute; top: 10px; right: 10px;
+  background: rgba(233,237,244,.07); border-color: rgba(233,237,244,.32); color: #E9EDF4; }
+.dqlwrap .copybtn.copied { background: var(--cream); color: var(--ink); border-color: var(--cream); }
+.dqlwrap .dql { padding-right: 220px; }
+.dqlwrap.tight .dql { padding-right: 110px; }
+
+/* DQL result table */
+.rtable { width: 100%; border-collapse: separate; margin-top: 12px;
+  border: 1px solid var(--line); border-radius: 12px; border-spacing: 0; overflow: hidden; }
+.rtable th { font: 600 11px var(--font-ui); letter-spacing: .05em; text-transform: uppercase;
+  color: var(--ink-soft); text-align: left; padding: 0 14px 7px; }
+.rtable th.r, .rtable td.r { text-align: right; }
+.rtable td { font: 400 12.5px var(--font-mono); color: var(--ink);
+  padding: 8px 14px; border-top: 1px solid var(--line); background: var(--card); }
+.rtable tr.hot td { background: var(--amber-wash); }
+.rtable thead th { padding-top: 9px; background: var(--cream-2); }
+
+/* ---------- diff (brand diff colors — no red, no green) ---------- */
+.diff { border: 1px solid var(--line); border-radius: 12px; overflow: hidden; background: var(--card); }
+.diff .dhead { display: flex; align-items: center; gap: 14px; padding: 9px 14px;
+  background: var(--cream-2); border-bottom: 1px solid var(--line);
+  font: 400 12px var(--font-mono); color: var(--ink); }
+.diff .dhead .right { margin-left: auto; color: var(--ink-soft); }
+.dline { display: grid; grid-template-columns: 46px 46px 26px 1fr;
+  font: 400 12.5px/1.75 var(--font-mono); color: var(--ink); }
+.dline .no { text-align: right; padding-right: 10px; color: var(--ink-faint); font-size: 11px;
+  border-right: 1px solid var(--line); background: var(--card); }
+.dline .sign { text-align: center; color: var(--ink-soft); }
+.dline .code { white-space: pre; overflow-x: auto; padding-right: 14px; }
+.dline.hunk { grid-template-columns: 1fr; background: var(--cream-2);
+  color: var(--ink-soft); padding: 2px 14px; font-size: 12px; border-bottom: 1px solid var(--line); }
+.dline.rem .sign, .dline.rem .code { background: var(--amber-wash); }
+.dline.add .sign, .dline.add .code { background: rgba(27,42,68,.08); }
+.dline.blame .sign { box-shadow: inset 3px 0 0 var(--amber); }
+.dline.blame .no.new { color: var(--amber-deep); font-weight: 700; }
+
+/* ---------- sparkline ---------- */
+.spark { display: block; width: 100%; }
+.axis { display: flex; justify-content: space-between; font: 500 10px var(--font-mono); color: var(--ink-faint); margin-top: 4px; }
+
+/* ---------- empty states ---------- */
+.empty { display: flex; flex-direction: column; align-items: center; gap: 18px;
+  text-align: center; padding: 48px 24px; }
+.empty img, .empty svg { opacity: .9; }
+.empty p { font: 400 15px/1.6 var(--font-ui); color: var(--ink-soft); max-width: 46ch; }
+
+/* ---------- motion discipline ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .dash-anim { animation: none; }
+  .livedot i { animation: none; }
+  * { transition-duration: 0.01ms !important; }
+}
