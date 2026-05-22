@@ -98,3 +98,172 @@
 .incident-page .ruler .seg { position: absolute; top: 56px; height: 0; border-top: 2.5px solid var(--ink); }
 .incident-page .ruler .seg.a { left: 0; width: 64%; }
 .incident-page .ruler .seg.b { left: 68.4%; right: 0; }
+.incident-page .ruler .tick { position: absolute; left: 22%; top: 36px; width: 0; height: 22px;
+  border-left: 2.5px solid var(--ink); }
+.incident-page .ruler .eye { position: absolute; left: 22%; top: 30px; width: 7px; height: 7px;
+  border: 2px solid var(--ink); border-radius: 50%; transform: translateX(-54%); background: var(--card); }
+.incident-page .ruler .fray { position: absolute; top: 44px; }
+.incident-page .ruler .gapline { position: absolute; top: 26px; left: 22%; width: 44.2%;
+  border-top: 1.5px dashed var(--amber); }
+.incident-page .ruler .gapline::before, .incident-page .ruler .gapline::after { content: ""; position: absolute; top: -4px;
+  height: 7px; border-left: 1.5px solid var(--amber); }
+.incident-page .ruler .gapline::before { left: 0; }
+.incident-page .ruler .gapline::after { right: 0; }
+.incident-page .ruler .gaplabel { position: absolute; top: 4px; left: 44%; transform: translateX(-50%);
+  font: 600 13px var(--font-mono); color: var(--amber-deep); background: var(--card); padding: 0 8px; }
+.incident-page .ruler .lab { position: absolute; top: 72px; transform: translateX(-50%);
+  font: 400 12px var(--font-mono); color: var(--ink-soft); white-space: nowrap; }
+.incident-page .ruler .lab.warn { color: var(--amber-deep); }
+
+/* ===== stage footer (diagnosed) ===== */
+.incident-page .sfoot { display: flex; align-items: center; gap: 16px; margin-top: 28px;
+  padding-top: 16px; border-top: 1px solid var(--line); }
+.incident-page .sfoot .spring { flex: 1; }
+.incident-page .counter { font: 600 12.5px var(--font-mono); color: var(--ink); background: var(--cream-2);
+  border: 1px solid var(--line); border-radius: var(--r-pill); padding: 5px 13px; }
+
+/* ===== rationale quote + model meta ===== */
+.incident-page .quote { border-left: 2.5px solid var(--amber); padding: 4px 0 4px 18px; margin: 20px 0;
+  font: 400 italic 14.5px/1.65 var(--font-ui); color: var(--ink); max-width: 70ch; }
+.incident-page .quote .num, .incident-page .quote .mono { font-style: normal; font-size: 13px; }
+.incident-page .metaline { font: 400 13px var(--font-mono); color: var(--ink-soft); }
+.incident-page .metaline b { color: var(--ink); font-weight: 400; }
+
+/* ===== PR card ===== */
+.incident-page .pr { padding: 20px; }
+.incident-page .pr .toprow { display: flex; align-items: center; gap: 10px; font: 400 12.5px var(--font-mono); color: var(--ink-soft); }
+.incident-page .pr .toprow .branch { background: var(--cream-2); border: 1px solid var(--line);
+  border-radius: var(--r-pill); padding: 2px 10px; color: var(--ink); }
+.incident-page .pr .title { display: flex; align-items: baseline; gap: 10px; margin-top: 12px; }
+.incident-page .pr .title .id { font: 600 15px var(--font-mono); color: var(--ink-soft); }
+.incident-page .pr .title .t { font: 600 16px var(--font-ui); color: var(--ink); }
+.incident-page .pr .toc { margin-top: 16px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+.incident-page .pr .toc .toclabel { padding: 7px 14px; background: var(--cream-2); border-bottom: 1px solid var(--line);
+  font: 400 11px var(--font-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--ink-soft); }
+.incident-page .pr .toc ol { list-style: none; margin: 0; padding: 0; }
+.incident-page .pr .toc li { display: flex; gap: 12px; padding: 7px 14px; border-top: 1px solid var(--line);
+  font: 500 13px var(--font-ui); color: var(--ink); background: var(--card); }
+.incident-page .pr .toc li:first-of-type { border-top: none; }
+.incident-page .pr .toc li .n { font: 400 12px var(--font-mono); color: var(--ink-faint); width: 14px; }
+.incident-page .pr .ci { margin-top: 14px; font: 400 13px var(--font-mono); color: var(--ink); }
+.incident-page .pr .ci .run { color: var(--amber-deep); }
+
+/* ===== stage 5 receipts ===== */
+.incident-page .okrow { display: flex; align-items: center; gap: 12px; padding: 12px 16px;
+  font: 400 13.5px var(--font-mono); color: var(--ink); }
+.incident-page .okrow + .okrow { border-top: 1px solid var(--line); }
+.incident-page .tickmark { font: 700 13px var(--font-mono); color: var(--ink); width: 18px; height: 18px;
+  border: 1.5px solid var(--ink); border-radius: 50%; display: inline-flex;
+  align-items: center; justify-content: center; font-size: 10px; flex: none; }
+
+/* stage 5 — the oversight beat */
+.incident-page .approve { padding: 28px 24px; }
+.incident-page .approve .btns { display: flex; align-items: center; gap: 14px; }
+.incident-page .approve .cap15 { font: 400 15px var(--font-ui); color: var(--ink); margin-top: 16px; }
+.incident-page .spect { padding: 20px 24px; display: flex; align-items: center; gap: 12px; }
+.incident-page .presence { width: 10px; height: 10px; border-radius: 50%; background: var(--amber); flex: none; }
+.incident-page .presence.faint { background: var(--ink-faint); }
+.incident-page .spect .t { font: 600 15px var(--font-ui); color: var(--ink); }
+
+/* ===== knot card (tied off) ===== */
+.incident-page .knotcard .khead { display: flex; align-items: center; gap: 16px; }
+.incident-page .knotcard .khead .t { font: 700 18px var(--font-ui); color: var(--ink); }
+.incident-page .knotcard .stop { font: 600 15px var(--font-ui); color: var(--ink); margin-top: 18px; }
+
+/* ===== replay ===== */
+.incident-page .replay { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.incident-page .rp { border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; }
+.incident-page .rp.was { background: var(--amber-wash); }
+.incident-page .rp.now { background: rgba(27,42,68,.08); }
+.incident-page .rp .line { font: 600 14px var(--font-mono); color: var(--ink); display: flex; align-items: center; gap: 10px; }
+.incident-page .rp .code5 { color: var(--amber-deep); }
+.incident-page .rp .sub { font: 400 12px var(--font-mono); color: var(--ink-soft); margin-top: 6px; }
+
+/* ===== recovery DQL + sparkline ===== */
+.incident-page .recov { display: grid; grid-template-columns: 1fr 348px; gap: 16px; align-items: stretch; }
+.incident-page .recov .rcv { display: flex; flex-direction: column; }
+.incident-page .recov .rcv .dqlwrap { flex: 1; }
+.incident-page .recov .rcv .dql { height: 100%; }
+.incident-page .sparkcard { border: 1px solid var(--line); border-radius: 12px; background: var(--card);
+  padding: 14px 16px 10px; display: flex; flex-direction: column; justify-content: space-between; }
+.incident-page .sparkcard .axis { display: flex; justify-content: space-between;
+  font: 400 10px var(--font-mono); color: var(--ink-faint); margin-top: 4px; }
+.incident-page .sparkcard .sl { font: 400 11px var(--font-mono); letter-spacing: .06em;
+  text-transform: uppercase; color: var(--ink-soft); margin-bottom: 6px; }
+
+/* ===== verified-closed footers ===== */
+.incident-page .receiptlist { font: 400 12.5px var(--font-mono); color: var(--ink); margin-top: 28px;
+  padding-top: 16px; border-top: 1px solid var(--line); }
+.incident-page .receiptlist .sep { color: var(--ink-faint); padding: 0 4px; }
+.incident-page .receiptlist a { color: var(--ink); }
+
+.incident-page .wallclock { margin-top: 20px; background: var(--ink); border-radius: 12px;
+  padding: 18px 22px; display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.incident-page .wallclock .item { font: 400 13.5px var(--font-mono); color: #E9EDF4; }
+.incident-page .wallclock .item .num { color: var(--amber); font-weight: 600; }
+.incident-page .wallclock .sep { color: rgba(233,237,244,.35); font-family: var(--font-mono); font-size: 13.5px; }
+.incident-page .wallclock .note { width: 100%; font: 400 11.5px var(--font-ui); color: rgba(233,237,244,.62); margin-top: 4px; }
+
+/* ===== calm error / retry line ===== */
+.incident-page .retryrow { display: flex; align-items: center; gap: 16px; padding: 56px 0;
+  font: 400 14px var(--font-ui); color: var(--ink-soft); }
+
+/* ============================================================
+   The medic's heartbeat — right drawer
+   ============================================================ */
+.hb-backdrop { position: fixed; inset: 0; background: rgba(27,42,68,0.20); z-index: 50; }
+.hb-drawer { position: fixed; top: 0; right: 0; bottom: 0; width: 480px; z-index: 60;
+  background: var(--card); box-shadow: var(--shadow-pop); border-left: 1px solid var(--line);
+  display: flex; flex-direction: column; padding: 32px 32px 26px; overflow-y: auto; }
+.hb-drawer .dhead { display: flex; align-items: center; justify-content: space-between; }
+.hb-drawer .dhead h2 { font: 700 20px var(--font-ui); color: var(--ink); letter-spacing: -0.01em; }
+.hb-drawer .xbtn { width: 34px; height: 34px; display: inline-flex; align-items: center; justify-content: center;
+  background: transparent; border: 1.5px solid var(--line); border-radius: 10px;
+  color: var(--ink); font-size: 14px; line-height: 1; cursor: pointer; flex: none; }
+.hb-drawer .ecg { display: block; width: 100%; height: 24px; margin: 12px 0 10px; flex: none; }
+.hb-drawer .dsub { font-size: 13.5px; line-height: 1.5; color: var(--ink-soft); }
+
+.hb-drawer .wf { margin-top: 38px; }
+.hb-drawer .wf .eyebrow { font: 600 11px var(--font-ui); letter-spacing: 0.09em; text-transform: uppercase;
+  color: var(--ink-faint); margin-bottom: 18px; }
+.hb-drawer .wf-row { margin-bottom: 20px; }
+.hb-drawer .wf-top { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 6px;
+  font-family: var(--font-mono); font-size: 12.5px; }
+.hb-drawer .wf-top .lbl { color: var(--ink); font-weight: 500; }
+.hb-drawer .wf-top .dur { color: var(--ink); }
+.hb-drawer .wf-top .toks { color: var(--amber-deep); }
+.hb-drawer .wf-track { position: relative; height: 12px; }
+.hb-drawer .wf-track::before { content: ""; position: absolute; left: 0; right: 0; top: 50%;
+  border-top: 1px solid rgba(27,42,68,0.11); }
+.hb-drawer .wf-bar { position: absolute; top: 1px; height: 10px; border-radius: 5px; background: var(--ink); }
+.hb-drawer .wf-bar.amber { background: var(--amber); }
+.hb-drawer .wf-axis { position: relative; height: 18px; margin-top: 4px; border-top: 1px solid var(--line); }
+.hb-drawer .wf-axis span { position: absolute; top: 4px; transform: translateX(-50%); white-space: nowrap;
+  font-family: var(--font-mono); font-size: 10px; color: var(--ink-faint); }
+.hb-drawer .wf-axis span::before { content: ""; position: absolute; left: 50%; top: -5px; height: 4px;
+  border-left: 1px solid var(--line); }
+.hb-drawer .wf-axis span:first-child { transform: none; }
+.hb-drawer .wf-axis span:first-child::before { left: 0; }
+.hb-drawer .wf-axis span:last-child { transform: translateX(-100%); }
+.hb-drawer .wf-axis span:last-child::before { left: 100%; }
+
+.hb-drawer .totals { display: flex; flex-wrap: wrap; column-gap: 9px; row-gap: 4px; align-items: baseline;
+  margin-top: 32px; padding-top: 20px; border-top: 1px solid var(--line);
+  font-family: var(--font-mono); font-size: 16px; color: var(--ink-soft); }
+.hb-drawer .totals .num { color: var(--ink); }
+.hb-drawer .totals .sep { color: var(--ink-faint); }
+.hb-drawer .trace-btn { margin-top: 30px; width: 100%; justify-content: center; }
+.hb-drawer .notrace { margin-top: 30px; font: 400 13px var(--font-ui); color: var(--ink-soft); text-align: center; }
+.hb-drawer .dfoot { margin-top: auto; padding-top: 24px; text-align: center;
+  font-size: 13px; font-style: italic; color: var(--ink-soft); }
+
+/* ============================================================
+   Decline confirm — in-app dialog (ink/cream, never
+   window.confirm)
+   ============================================================ */
+.dc-backdrop { position: fixed; inset: 0; background: rgba(27,42,68,0.20); z-index: 70;
+  display: flex; align-items: center; justify-content: center; }
+.dc-card { background: var(--card); border: 1px solid var(--line); border-radius: var(--r-card);
+  box-shadow: var(--shadow-pop); width: 460px; max-width: calc(100vw - 48px); padding: 26px 28px; }
+.dc-card .t { font: 600 16px/1.5 var(--font-ui); color: var(--ink); }
+.dc-card .btns { display: flex; justify-content: flex-end; gap: 12px; margin-top: 22px; }
