@@ -10,3 +10,22 @@
 
 import { Route, Routes } from "react-router-dom";
 import Chrome from "./components/Chrome";
+import Incident from "./pages/Incident";
+import NotFound from "./pages/NotFound";
+import SettingsPage from "./pages/SettingsPage";
+import ShopFloor from "./pages/ShopFloor";
+import Yours from "./pages/Yours";
+
+export default function App() {
+  return (
+    <Chrome>
+      <Routes>
+        <Route path="/" element={<ShopFloor />} />
+        <Route path="/incident/:id" element={<Incident />} />
+        <Route path="/yours" element={<Yours />} />
+        <Route path="/yours/settings" element={<SettingsPage />} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </Chrome>
+  );
+}
