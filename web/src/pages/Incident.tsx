@@ -128,3 +128,238 @@ function StageRow({
 }: StageRowProps) {
   const spineState =
     stage.state === "active" ? "active" : stage.state === "pending" ? "pending" : "done";
+
+  // stage 5 while the decision is live
+  const oversight = stage.key === "approved" && stage.state === "active";
+  const holder = presence?.holder ?? false;
+
+  if (oversight && !holder) {
+    // spectator / pick-up / BYO-waiting: a bare card hung on the thread
+    const nodeTop = presence?.can_pickup ? 44 : 31;
+    return (
+      <section className="stage">
+        <VerticalSpine state="active" first={isFirst} last={isLast} nodeTop={nodeTop} />
+        <div className="body">
+          <SpectatorCard incident={incident} presence={presence} actions={actions} />
+        </div>
+      </section>
+    );
+  }
+
+  const canToggle = stage.state !== "pending";
+  const onKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
+    if (canToggle && (e.key === "Enter" || e.key === " ")) {
+      e.preventDefault();
+      onToggle();
+    }
+  };
+
+  return (
+    <section className={cx("stage", stage.state === "pending" && "pending")}>
+      <VerticalSpine state={spineState} first={isFirst} last={isLast && !knot} knot={knot} />
+      <div className="body">
+        <div className={cx("scard", !expanded && "collapsed", knot && "knotcard")}>
+          <div
+            className={cx("shead", canToggle && "clickable")}
+            role={canToggle ? "button" : undefined}
+            tabIndex={canToggle ? 0 : undefined}
+            aria-expanded={canToggle ? expanded : undefined}
+            onClick={canToggle ? onToggle : undefined}
+            onKeyDown={onKeyDown}
+          >
+            <span className="sidx num">{String(index + 1).padStart(2, "0")}</span>
+            <span className="sname">{stage.name}</span>
+            <span className="skey">{stageSummary(stage, incident, presence)}</span>
+            <StageElapsed stage={stage} incident={incident} />
+          </div>
+          {expanded &&
+            (oversight && holder ? (
+              <ApprovePanel incident={incident} actions={actions} />
+            ) : (
+              <div className="sbody">
+                <StageBody stage={stage} incident={incident} />
+              </div>
+            ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ------------------------------------------------------------------ the page
+
+export default function Incident() {
+  const { id } = useParams<{ id: string }>();
+  const { incident, presence, medic, error, reload } = useIncident(id);
+  const [searchParams] = useSearchParams();
+  const [drawerOpen, setDrawerOpen] = useState(() => searchParams.get("medic") === "1");
+  const [declineOpen, setDeclineOpen] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const [actionError, setActionError] = useState<string | null>(null);
+
+  // expand/collapse: user choices override the defaults; the auto-expand
+  // follows the active stage as SSE updates arrive.
+  const [overrides, setOverrides] = useState<Record<string, boolean>>({});
+  const activeKey = incident?.stages.find((s) => s.state === "active")?.key ?? null;
+  const prevActiveRef = useRef<string | null>(null);
+  useEffect(() => {
+    if (activeKey && activeKey !== prevActiveRef.current) {
+      prevActiveRef.current = activeKey;
+      setOverrides((prev) => {
+        if (!(activeKey in prev)) {
+          return prev;
+        }
+        const next = { ...prev };
+        delete next[activeKey];
+        return next;
+      });
+    }
+  }, [activeKey]);
+
+  const liveWall = useElapsed(incident && incident.status === "live" ? incident.started_at : null);
+
+  const act = useCallback(
+    (call: () => Promise<unknown>, after?: () => void) => {
+      setBusy(true);
+      setActionError(null);
+      call()
+        .then(() => {
+          after?.();
+          reload();
+        })
+        .catch(() => {
+          setActionError("That didn’t go through — the server said no. Try again.");
+        })
+        .finally(() => setBusy(false));
+    },
+    [reload]
+  );
+
+  if (error) {
+    const is404 = error.includes("404");
+    return (
+      <main className="wrap incident-page">
+        {is404 ? (
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 6, padding: "64px 0 24px" }}>
+            <EmptyState size={320}>This incident never existed.</EmptyState>
+            <BtnInk to="/">Back to the shop floor</BtnInk>
+            <span className="num" style={{ fontSize: 12, color: "var(--ink-faint)", marginTop: 18 }}>
+              404
+            </span>
+          </div>
+        ) : (
+          <div className="retryrow">
+            <span>The thread slipped — this incident wouldn&rsquo;t load.</span>
+            <BtnGhost size="sm" onClick={reload}>
+              Try again
+            </BtnGhost>
+          </div>
+        )}
+      </main>
+    );
+  }
+
+  if (!incident) {
+    return <main className="wrap incident-page" style={{ minHeight: 480 }} />;
+  }
+
+  const actions: StageActions = {
+    onApprove: () => act(() => api.approve(incident.id)),
+    onDeclineAsk: () => setDeclineOpen(true),
+    onPickup: () => act(() => api.pickup(incident.id)),
+    busy,
+    actionError,
+  };
+
+  const wall =
+    incident.status === "live"
+      ? liveWall
+      : incident.ended_at !== null
+        ? incident.ended_at - incident.started_at
+        : null;
+  const watching = presence?.watching ?? incident.watching;
+
+  // tied-off / declined incidents end at the knot: later stages never render
+  const terminal =
+    incident.status === "tied_off" ||
+    incident.status === "declined_reverted" ||
+    incident.status === "declined_timeout";
+  const stages = incident.stages.filter(
+    (s) => s.state !== "skipped" && !(terminal && s.state === "pending")
+  );
+
+  const defaultExpanded = (stage: Stage): boolean =>
+    incident.status === "live"
+      ? stage.state === "active" || stage.state === "tied_off"
+      : stage.state !== "pending";
+  const isExpanded = (stage: Stage): boolean => overrides[stage.key] ?? defaultExpanded(stage);
+  const toggle = (stage: Stage) =>
+    setOverrides((prev) => ({ ...prev, [stage.key]: !isExpanded(stage) }));
+
+  return (
+    <main className="wrap incident-page">
+      {/* ===== header band ===== */}
+      <div className="hband">
+        <div className="crumb">
+          <Link to="/">shop floor</Link> / incident{" "}
+          <span className="num">{incident.problem_id ?? incident.id}</span>
+        </div>
+        <div className="h1row">
+          <h1>{incident.title}</h1>
+          <StatusPill incident={incident} />
+        </div>
+        <div className="metarow">
+          <span className="meta">
+            started <span className="num">{utcClock(incident.started_at)}</span> UTC{" "}
+            <span className="sep">·</span> wall clock <span className="num">{mmss(wall)}</span>{" "}
+            <span className="sep">·</span> <span className="num">{watching}</span> watching
+          </span>
+          <span className="spring" />
+          <BtnGhost size="sm" onClick={() => setDrawerOpen(true)}>
+            The medic&rsquo;s heartbeat
+          </BtnGhost>
+          {incident.problem_url && (
+            <a className="go" href={incident.problem_url} target="_blank" rel="noreferrer">
+              Open problem in Dynatrace →
+            </a>
+          )}
+        </div>
+      </div>
+
+      {/* ===== the receipt ledger ===== */}
+      <div className="ledger">
+        {stages.map((stage, i) => (
+          <StageRow
+            key={stage.key}
+            stage={stage}
+            index={incident.stages.indexOf(stage)}
+            isFirst={i === 0}
+            isLast={i === stages.length - 1}
+            knot={terminal && i === stages.length - 1}
+            incident={incident}
+            presence={presence}
+            expanded={isExpanded(stage)}
+            onToggle={() => toggle(stage)}
+            actions={actions}
+          />
+        ))}
+      </div>
+
+      {drawerOpen && (
+        <HeartbeatDrawer
+          incidentId={incident.id}
+          medic={medic}
+          onClose={() => setDrawerOpen(false)}
+        />
+      )}
+
+      {declineOpen && (
+        <DeclineDialog
+          busy={busy}
+          onCancel={() => setDeclineOpen(false)}
+          onConfirm={() => act(() => api.decline(incident.id), () => setDeclineOpen(false))}
+        />
+      )}
+    </main>
+  );
+}
